@@ -1,52 +1,63 @@
-<div class="container">
-  <div class="header">
-    <h1>💕 Cat Match</h1>
-    <p class="subtitle">Like or pass on cats to find your matches</p>
+<div class="max-w-lg mx-auto px-6 py-8">
+
+  <div class="mb-8 text-center">
+    <h1 class="text-3xl font-bold text-slate-800 tracking-tight">💕 Cat Match</h1>
+    <p class="text-slate-500 mt-1">Like or pass to find your perfect cat</p>
   </div>
 
   @if (isLoading()) {
-    <div class="loading">
-      <mat-spinner></mat-spinner>
-      <p>Loading cats...</p>
+    <div class="state-center">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p class="text-sm">Loading cats…</p>
     </div>
   } @else if (currentCat) {
-    <div class="match-container">
-      <mat-progress-bar mode="determinate" [value]="progress"></mat-progress-bar>
+    <div class="flex flex-col gap-5">
 
-      <mat-card class="cat-card-large">
-        <div class="cat-image">
-          <mat-icon class="large-icon">pets</mat-icon>
+      <!-- Progress -->
+      <div class="flex items-center gap-3">
+        <mat-progress-bar mode="determinate" [value]="progress" class="flex-1 rounded-full"></mat-progress-bar>
+        <span class="text-xs text-slate-400 whitespace-nowrap">{{ currentIndex() + 1 }} / {{ cats().length }}</span>
+      </div>
+
+      <!-- Cat card -->
+      <mat-card class="overflow-hidden">
+        <div class="match-hero">
+          <mat-icon class="match-hero-icon">pets</mat-icon>
         </div>
-        <mat-card-content>
-          <h2>{{ currentCat.name }}</h2>
-          <p class="age"><strong>Age:</strong> {{ currentCat.age }}</p>
-          <p class="description">{{ currentCat.description }}</p>
-        </mat-card-content>
+        <div class="p-6">
+          <h2 class="text-2xl font-bold text-slate-800 mb-1">{{ currentCat.name }}</h2>
+          <p class="text-xs text-indigo-500 font-semibold mb-3">🎂 {{ currentCat.age }}</p>
+          <p class="text-sm text-slate-500 leading-relaxed">{{ currentCat.description }}</p>
+        </div>
       </mat-card>
 
-      <div class="match-actions">
-        <button mat-raised-button color="warn" (click)="onDislike()">
-          <mat-icon>close</mat-icon>
-          Pass
+      <!-- Actions -->
+      <div class="flex gap-4">
+        <button mat-stroked-button color="warn" (click)="onDislike()" class="match-action-btn">
+          <mat-icon>close</mat-icon> Pass
         </button>
-        <button mat-raised-button color="accent" (click)="onLike()">
-          <mat-icon>favorite</mat-icon>
-          Like
+        <button mat-raised-button color="primary" (click)="onLike()" class="match-action-btn">
+          <mat-icon>favorite</mat-icon> Like
         </button>
       </div>
 
+      <!-- Match count -->
       @if (matchedCats().length > 0) {
-        <div class="matches-info">
-          <p>❤️ You have {{ matchedCats().length }} match(es)!</p>
+        <div class="matches-badge">
+          <mat-icon style="font-size:18px;width:18px;height:18px">favorite</mat-icon>
+          {{ matchedCats().length }} match{{ matchedCats().length !== 1 ? 'es' : '' }} so far!
         </div>
       }
     </div>
+
   } @else {
-    <div class="no-more">
-      <mat-icon class="large-icon">sentiment_satisfied</mat-icon>
-      <p>No more cats to match!</p>
+    <div class="state-center page-card text-center">
+      <span class="text-5xl">🎉</span>
+      <p class="font-semibold text-slate-700 text-lg">You've seen all cats!</p>
       @if (matchedCats().length > 0) {
-        <p>You matched with {{ matchedCats().length }} cat(s)</p>
+        <p class="text-slate-500 text-sm">You matched with <strong>{{ matchedCats().length }}</strong> cat(s)</p>
+      } @else {
+        <p class="text-slate-400 text-sm">No matches this time — try again!</p>
       }
     </div>
   }

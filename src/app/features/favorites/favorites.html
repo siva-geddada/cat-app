@@ -1,48 +1,45 @@
-<div class="container">
-  <div class="header">
-    <h1>❤️ My Favorite Cats</h1>
-    <p class="subtitle">Your collection of loved cats</p>
+<div class="max-w-7xl mx-auto px-6 py-8">
+
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-slate-800 tracking-tight">❤️ My Favourites</h1>
+    <p class="text-slate-500 mt-1">Your personal collection of loved cats</p>
   </div>
 
-  <div class="cats-grid">
-    @if (isLoading()) {
-      <div class="loading">
-        <mat-spinner></mat-spinner>
-        <p>Loading favorites...</p>
-      </div>
-    } @else if (cats().length === 0) {
-      <div class="empty-state">
-        <mat-icon class="empty-icon">favorite_border</mat-icon>
-        <p>No favorites yet. Mark some cats as favorites!</p>
-      </div>
-    } @else {
+  @if (isLoading()) {
+    <div class="state-center">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p class="text-sm">Loading favourites…</p>
+    </div>
+  } @else if (cats().length === 0) {
+    <div class="state-center page-card max-w-sm mx-auto">
+      <mat-icon class="fav-empty-icon">favorite_border</mat-icon>
+      <p class="font-medium text-slate-600">No favourites yet</p>
+      <p class="text-sm text-slate-400">Head to the Gallery and heart some cats!</p>
+    </div>
+  } @else {
+    <div class="cats-grid">
       @for (cat of cats(); track cat.id) {
-        <mat-card class="cat-card">
+        <mat-card class="overflow-hidden flex flex-col">
           @if (cat.imageUrl) {
-          <img [src]="cat.imageUrl" [alt]="cat.info.name" class="cat-image" />
+            <img [src]="cat.imageUrl" [alt]="cat.info.name" class="w-full h-48 object-cover" />
           } @else {
-          <div class="cat-image placeholder">
-            <mat-icon>pets</mat-icon>
-          </div>
+            <div class="cat-placeholder">
+              <mat-icon style="font-size:40px;width:40px;height:40px">pets</mat-icon>
+            </div>
           }
-          <div class="cat-content">
-            <h3>{{ cat.info.name }}</h3>
-            <p class="age"><strong>Age:</strong> {{ cat.info.age }}</p>
-            <p class="description">{{ cat.info.description }}</p>
+          <div class="p-4 flex flex-col flex-1">
+            <h3 class="font-semibold text-slate-800 text-base mb-1">{{ cat.info.name }}</h3>
+            <p class="text-xs text-indigo-500 font-medium mb-2">🎂 {{ cat.info.age }}</p>
+            <p class="text-sm text-slate-500 leading-relaxed flex-1">{{ cat.info.description }}</p>
           </div>
-          <div class="cat-actions">
-            <a [routerLink]="['/cat', cat.id]" mat-button color="accent">
-              View & Edit
-            </a>
-            <button
-              mat-icon-button
-              color="warn"
-              (click)="onRemoveFavorite(cat.id)">
+          <div class="px-4 py-3 flex items-center justify-between border-t border-slate-100">
+            <a [routerLink]="['/cat', cat.id]" mat-button color="primary">View & Edit</a>
+            <button mat-icon-button color="warn" (click)="onRemoveFavorite(cat.id)" matTooltip="Remove favourite">
               <mat-icon>favorite</mat-icon>
             </button>
           </div>
         </mat-card>
       }
-    }
-  </div>
+    </div>
+  }
 </div>

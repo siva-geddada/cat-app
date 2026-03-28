@@ -1,56 +1,64 @@
-<div class="container">
-  <header class="header">
-    <button mat-icon-button (click)="onBack()" class="back-button">
+<div class="max-w-2xl mx-auto px-6 py-8">
+
+  <!-- Back + title -->
+  <div class="flex items-center gap-3 mb-8">
+    <button mat-icon-button (click)="onBack()" class="text-slate-400 hover:text-slate-600">
       <mat-icon>arrow_back</mat-icon>
     </button>
-    <h1>🐱 Cat Details</h1>
-  </header>
+    <div>
+      <h1 class="text-2xl font-bold text-slate-800 tracking-tight m-0">Cat Details</h1>
+      <p class="text-slate-400 text-sm mt-0.5">Update your cat's information</p>
+    </div>
+  </div>
 
   @if (isLoading()) {
-    <div class="loading">
-      <mat-spinner></mat-spinner>
-      <p>Loading cat...</p>
+    <div class="state-center">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p class="text-sm">Loading cat…</p>
     </div>
   } @else if (cat()) {
-    <mat-card class="detail-card">
-      <h2>{{ cat()!.name }}</h2>
+    <div class="page-card">
+      <div class="flex items-center gap-3 mb-6 pb-5 border-b border-slate-100">
+        <div class="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-xl">🐱</div>
+        <div>
+          <p class="text-xs text-slate-400 font-medium uppercase tracking-wide">Editing</p>
+          <h2 class="text-lg font-semibold text-slate-800 m-0">{{ cat()!.name }}</h2>
+        </div>
+      </div>
 
-      <form [formGroup]="updateForm" (ngSubmit)="onUpdateCat()" class="form">
-        <mat-form-field appearance="outline" class="full-width">
+      <form [formGroup]="updateForm" (ngSubmit)="onUpdateCat()" class="flex flex-col gap-1">
+        <mat-form-field appearance="outline">
           <mat-label>Cat Name</mat-label>
           <input matInput formControlName="name" />
         </mat-form-field>
 
-        <mat-form-field appearance="outline" class="full-width">
+        <mat-form-field appearance="outline">
           <mat-label>Age</mat-label>
           <input matInput formControlName="age" />
         </mat-form-field>
 
-        <mat-form-field appearance="outline" class="full-width">
+        <mat-form-field appearance="outline">
           <mat-label>Description</mat-label>
           <textarea matInput formControlName="description" rows="4"></textarea>
         </mat-form-field>
 
-        <div class="actions">
+        <div class="flex gap-3 justify-end mt-4">
+          <button mat-stroked-button type="button" (click)="onBack()">Cancel</button>
           <button mat-raised-button color="primary" [disabled]="!updateForm.valid || isUpdating()">
             @if (isUpdating()) {
               <mat-spinner diameter="20"></mat-spinner>
             } @else {
-              Update Cat
+              Save Changes
             }
-          </button>
-          <button mat-stroked-button color="accent" type="button" (click)="onBack()">
-            Cancel
           </button>
         </div>
       </form>
-    </mat-card>
+    </div>
   } @else {
-    <div class="error-state">
-      <p>Cat not found</p>
-      <button mat-raised-button color="primary" (click)="onBack()">
-        Go Back
-      </button>
+    <div class="state-center page-card">
+      <mat-icon style="font-size:48px;width:48px;height:48px;color:#cbd5e1">search_off</mat-icon>
+      <p class="font-medium text-slate-500">Cat not found</p>
+      <button mat-raised-button color="primary" (click)="onBack()">Go Back</button>
     </div>
   }
 </div>

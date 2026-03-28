@@ -1,67 +1,40 @@
-.navbar-container {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  width: 100%;
-  max-width: 100%;
-  margin: 0 auto;
-  padding: 0 32px;
-  height: 64px;
-  gap: 16px;
-}
-
-.app-title {
-  margin: 0;
-  font-size: 1.8rem;
+.navbar-inner {
   display: flex;
   align-items: center;
   gap: 12px;
-  color: white;
-  font-weight: 700;
-  letter-spacing: -0.5px;
+  width: 100%;
+  padding: 0 24px;
+  height: 64px;
 }
 
-.emoji {
-  font-size: 2.2rem;
-  display: block;
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-icon {
+  font-size: 1.8rem;
+  line-height: 1;
+}
+
+.brand-name {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #6366f1;
+  letter-spacing: -0.3px;
 }
 
 .menu-toggle {
   display: none;
-  color: white;
+  color: #64748b;
 }
 
-/* Mobile responsive styles */
 @media (max-width: 768px) {
-  .navbar-container {
-    padding: 0 16px;
-  }
-
   .menu-toggle {
-    display: block;
-    margin-right: 8px;
+    display: flex;
   }
-
-  .app-title {
-    font-size: 1.4rem;
-    gap: 8px;
-  }
-
-  .emoji {
-    font-size: 1.8rem;
-  }
-}
-
-@media (max-width: 768px) {
-  .navbar-container {
+  .navbar-inner {
     padding: 0 16px;
-  }
-
-  .app-title {
-    font-size: 1.4rem;
-  }
-
-  .emoji {
-    font-size: 1.8rem;
   }
 }

@@ -1,6 +1,8 @@
 <aside class="sidenav" [class.open]="isOpen()">
+  <p class="nav-section-label">Navigation</p>
   <nav class="nav-menu">
-    <a (click)="closeSidenav()" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="nav-link">
+    <a (click)="closeSidenav()" routerLink="/" routerLinkActive="active"
+       [routerLinkActiveOptions]="{ exact: true }" class="nav-link">
       <mat-icon>home</mat-icon>
       <span>Home</span>
     </a>
@@ -17,7 +19,7 @@
       <span>Favorites</span>
     </a>
     <a (click)="closeSidenav()" routerLink="/match" routerLinkActive="active" class="nav-link">
-      <mat-icon>favorite_border</mat-icon>
+      <mat-icon>auto_awesome</mat-icon>
       <span>Cat Match</span>
     </a>
   </nav>

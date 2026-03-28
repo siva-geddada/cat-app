@@ -1,30 +1,35 @@
-<div class="container">
-  <div class="header">
-    <h1>🐱 Cat Gallery</h1>
-    <p class="subtitle">Manage your favorite cats</p>
+<div class="max-w-7xl mx-auto px-6 py-8">
+
+  <!-- Page header -->
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-slate-800 tracking-tight">🐱 Cat Gallery</h1>
+    <p class="text-slate-500 mt-1">Add and manage your favourite cats</p>
   </div>
 
-  <div class="content">
-    <!-- Create Cat Form -->
-    <div class="create-section">
-      <h2>Add New Cat</h2>
-      <form [formGroup]="createForm" (ngSubmit)="onCreateCat()" class="form">
-        <mat-form-field appearance="outline" class="full-width">
+  <div class="home-layout">
+
+    <!-- Create form -->
+    <div class="page-card self-start">
+      <h2 class="text-lg font-semibold text-slate-700 mb-5">Add New Cat</h2>
+      <form [formGroup]="createForm" (ngSubmit)="onCreateCat()" class="flex flex-col gap-1">
+        <mat-form-field appearance="outline">
           <mat-label>Cat Name</mat-label>
-          <input matInput formControlName="name" placeholder="Enter cat name" />
+          <input matInput formControlName="name" placeholder="e.g. Whiskers" />
         </mat-form-field>
 
-        <mat-form-field appearance="outline" class="full-width">
+        <mat-form-field appearance="outline">
           <mat-label>Age</mat-label>
-          <input matInput formControlName="age" placeholder="e.g., 2 years" />
+          <input matInput formControlName="age" placeholder="e.g. 2 years" />
         </mat-form-field>
 
-        <mat-form-field appearance="outline" class="full-width">
+        <mat-form-field appearance="outline">
           <mat-label>Description</mat-label>
-          <textarea matInput formControlName="description" placeholder="Describe the cat..." rows="3"></textarea>
+          <textarea matInput formControlName="description" placeholder="Describe the cat…" rows="3"></textarea>
         </mat-form-field>
 
-        <button mat-raised-button color="primary" [disabled]="!createForm.valid || isCreating()">
+        <button mat-raised-button color="primary"
+                class="mt-2 h-11"
+                [disabled]="!createForm.valid || isCreating()">
           @if (isCreating()) {
             <mat-spinner diameter="20"></mat-spinner>
           } @else {
@@ -34,46 +39,53 @@
       </form>
     </div>
 
-    <!-- Cats List -->
-    <div class="cats-section">
-      <h2>All Cats</h2>
+    <!-- Cats list -->
+    <div>
+      <div class="flex items-center justify-between mb-5">
+        <h2 class="text-lg font-semibold text-slate-700">All Cats</h2>
+        @if (!isLoading()) {
+          <span class="text-sm text-slate-400 bg-slate-100 px-3 py-1 rounded-full">
+            {{ cats().length }} cat{{ cats().length !== 1 ? 's' : '' }}
+          </span>
+        }
+      </div>
 
       @if (isLoading()) {
-        <div class="loading">
-          <mat-spinner></mat-spinner>
-          <p>Loading cats...</p>
+        <div class="state-center">
+          <mat-spinner diameter="40"></mat-spinner>
+          <p class="text-sm">Loading cats…</p>
         </div>
       } @else if (cats().length === 0) {
-        <div class="empty-state">
-          <p>No cats yet. Create one above!</p>
+        <div class="state-center page-card">
+          <mat-icon class="text-5xl text-slate-300" style="font-size:48px;width:48px;height:48px">pets</mat-icon>
+          <p class="font-medium text-slate-500">No cats yet</p>
+          <p class="text-sm text-slate-400">Add your first cat using the form</p>
         </div>
       } @else {
         <div class="cats-grid">
           @for (cat of cats(); track cat.id) {
-            <mat-card class="cat-card">
+            <mat-card class="overflow-hidden flex flex-col">
               @if (cat.imageUrl) {
-                <img [src]="cat.imageUrl" [alt]="cat.info.name" class="cat-image" />
+                <img [src]="cat.imageUrl" [alt]="cat.info.name" class="w-full h-48 object-cover" />
               } @else {
-                <div class="cat-image placeholder">
-                  <mat-icon>pets</mat-icon>
+                <div class="cat-placeholder">
+                  <mat-icon style="font-size:40px;width:40px;height:40px">pets</mat-icon>
                 </div>
               }
-              <div class="cat-content">
-                <h3>{{ cat.info.name }}</h3>
-                <p class="age"><strong>Age:</strong> {{ cat.info.age }}</p>
-                <p class="description">{{ cat.info.description }}</p>
+              <div class="p-4 flex flex-col flex-1">
+                <h3 class="font-semibold text-slate-800 text-base mb-1">{{ cat.info.name }}</h3>
+                <p class="text-xs text-indigo-500 font-medium mb-2">🎂 {{ cat.info.age }}</p>
+                <p class="text-sm text-slate-500 leading-relaxed flex-1">{{ cat.info.description }}</p>
               </div>
-              <div class="cat-actions">
-                <a [routerLink]="['/cat', cat.id]" mat-button color="accent" matTooltip="Edit cat">
+              <div class="px-4 py-3 flex items-center justify-between border-t border-slate-100">
+                <a [routerLink]="['/cat', cat.id]" mat-button color="primary" matTooltip="Edit cat">
                   Edit
                 </a>
-                <button
-                  mat-icon-button
-                  color="warn"
-                  (click)="onDeleteCat(cat.id)"
-                  [disabled]="isDeleting(cat.id)"
-                  matTooltip="Delete cat">
-                  <mat-icon>delete</mat-icon>
+                <button mat-icon-button color="warn"
+                        (click)="onDeleteCat(cat.id)"
+                        [disabled]="isDeleting(cat.id)"
+                        matTooltip="Delete cat">
+                  <mat-icon>delete_outline</mat-icon>
                 </button>
               </div>
             </mat-card>
@@ -81,5 +93,6 @@
         </div>
       }
     </div>
+
   </div>
 </div>

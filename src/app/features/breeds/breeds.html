@@ -1,29 +1,37 @@
-<div class="container">
-  <div class="header">
-    <h1>🐾 All Cats</h1>
-    <p class="subtitle">Explore our complete collection</p>
+<div class="max-w-3xl mx-auto px-6 py-8">
+
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-slate-800 tracking-tight">🐾 All Cats</h1>
+    <p class="text-slate-500 mt-1">Explore the complete collection</p>
   </div>
 
   @if (isLoading()) {
-    <div class="loading">
-      <mat-spinner></mat-spinner>
-      <p>Loading cats...</p>
+    <div class="state-center">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p class="text-sm">Loading cats…</p>
+    </div>
+  } @else if (cats().length === 0) {
+    <div class="state-center page-card">
+      <mat-icon style="font-size:48px;width:48px;height:48px;color:#cbd5e1">pets</mat-icon>
+      <p class="font-medium text-slate-500">No cats found</p>
     </div>
   } @else {
-    <mat-card class="cats-list-card">
+    <div class="page-card p-0 overflow-hidden">
       <mat-list>
-        @for (cat of cats(); track cat.id) {
-          <mat-list-item>
-            <mat-icon matListItemIcon>pets</mat-icon>
-            <div matListItemTitle>{{ cat.name }}</div>
-            <div matListItemLine>{{ cat.age }} • {{ cat.description | slice:0:50 }}...</div>
-            <a [routerLink]="['/cat', cat.id]" mat-icon-button matListItemMeta>
-              <mat-icon>arrow_forward</mat-icon>
+        @for (cat of cats(); track cat.id; let last = $last) {
+          <mat-list-item class="breeds-item">
+            <div class="breed-avatar" matListItemIcon>
+              <mat-icon>pets</mat-icon>
+            </div>
+            <div matListItemTitle class="font-semibold text-slate-800">{{ cat.info.name }}</div>
+            <div matListItemLine class="text-slate-400 text-sm">{{ cat.info.age }} · {{ cat.info.description | slice:0:60 }}…</div>
+            <a [routerLink]="['/cat', cat.id]" mat-icon-button matListItemMeta class="text-slate-400">
+              <mat-icon>chevron_right</mat-icon>
             </a>
           </mat-list-item>
-          <mat-divider></mat-divider>
+          @if (!last) { <mat-divider></mat-divider> }
         }
       </mat-list>
-    </mat-card>
+    </div>
   }
 </div>

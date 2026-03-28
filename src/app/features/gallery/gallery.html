@@ -1,39 +1,42 @@
-<div class="container">
-  <div class="header">
-    <h1>🖼️ Gallery</h1>
-    <p class="subtitle">Browse all available cats</p>
+<div class="max-w-7xl mx-auto px-6 py-8">
+
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-slate-800 tracking-tight">🖼️ Gallery</h1>
+    <p class="text-slate-500 mt-1">Browse and favourite all available cats</p>
   </div>
 
   @if (isLoading()) {
-    <div class="loading">
-      <mat-spinner></mat-spinner>
-      <p>Loading gallery...</p>
+    <div class="state-center">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p class="text-sm">Loading gallery…</p>
+    </div>
+  } @else if (cats().length === 0) {
+    <div class="state-center page-card">
+      <mat-icon style="font-size:48px;width:48px;height:48px;color:#cbd5e1">collections</mat-icon>
+      <p class="font-medium text-slate-500">No cats in the gallery yet</p>
     </div>
   } @else {
     <div class="cats-grid">
       @for (cat of cats(); track cat.id) {
-        <mat-card class="cat-card">
+        <mat-card class="overflow-hidden flex flex-col">
           @if (cat.imageUrl) {
-            <img [src]="cat.imageUrl" [alt]="cat.info.name" class="cat-image" />
+            <img [src]="cat.imageUrl" [alt]="cat.info.name" class="w-full h-48 object-cover" />
           } @else {
-            <div class="cat-image placeholder">
-              <mat-icon>pets</mat-icon>
+            <div class="cat-placeholder">
+              <mat-icon style="font-size:40px;width:40px;height:40px">pets</mat-icon>
             </div>
           }
-          <div class="cat-content">
-            <h3>{{ cat.info.name }}</h3>
-            <p class="age"><strong>Age:</strong> {{ cat.info.age }}</p>
-            <p class="description">{{ cat.info.description }}</p>
+          <div class="p-4 flex flex-col flex-1">
+            <h3 class="font-semibold text-slate-800 text-base mb-1">{{ cat.info.name }}</h3>
+            <p class="text-xs text-indigo-500 font-medium mb-2">🎂 {{ cat.info.age }}</p>
+            <p class="text-sm text-slate-500 leading-relaxed flex-1">{{ cat.info.description }}</p>
           </div>
-          <div class="cat-actions">
-            <a [routerLink]="['/cat', cat.id]" mat-button color="accent">
-              Edit
-            </a>
-            <button
-              mat-icon-button
-              [color]="isFavorited(cat.id) ? 'warn' : ''"
-              (click)="toggleFavorite(cat.id)"
-              matTooltip="Add to favorites">
+          <div class="px-4 py-3 flex items-center justify-between border-t border-slate-100">
+            <a [routerLink]="['/cat', cat.id]" mat-button color="primary">Edit</a>
+            <button mat-icon-button
+                    [color]="isFavorited(cat.id) ? 'warn' : ''"
+                    (click)="toggleFavorite(cat.id)"
+                    [matTooltip]="isFavorited(cat.id) ? 'Remove favourite' : 'Add to favourites'">
               <mat-icon>{{ isFavorited(cat.id) ? 'favorite' : 'favorite_border' }}</mat-icon>
             </button>
           </div>
