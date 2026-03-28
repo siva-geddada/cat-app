@@ -5,7 +5,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterLink } from '@angular/router';
 import { CatService, NotificationService } from '../../core/service';
-import { CatApiResponse } from '../../shared/models/cat.model';
+import { CatApiResponse, CatApiListResponse } from '../../shared/models/cat.model';
 
 @Component({
   selector: 'app-gallery',
@@ -37,8 +37,8 @@ export class Gallery {
   loadAllCats(): void {
     this.isLoading.set(true);
     this.catService.getAllCats().subscribe({
-      next: (cats) => {
-        this.cats.set(this.catService.assignImageUrl(cats?.data));
+      next: (response: CatApiListResponse) => {
+        this.cats.set(this.catService.assignImageUrl(response?.data ?? []));
         this.isLoading.set(false);
       },
       error: () => {
