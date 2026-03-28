@@ -1,23 +1,21 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { RouterLink } from '@angular/router';
+import { Sidenav } from '../sidenav/sidenav';
 
 @Component({
   selector: 'app-navbar',
-  standalone: true,
-  imports: [
-    CommonModule,
-    MatToolbarModule,
-    MatButtonModule,
-    MatIconModule,
-    RouterLink
-  ],
+  imports: [CommonModule, MatToolbarModule, MatButtonModule, MatIconModule],
   templateUrl: './navbar.html',
   styleUrl: './navbar.css',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Navbar {
+  @ViewChild(Sidenav) sidenav?: Sidenav;
+
+  toggleSidenav() {
+    this.sidenav?.toggleSidenav();
+  }
 }

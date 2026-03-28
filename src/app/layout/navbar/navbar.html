@@ -1,14 +1,11 @@
 <mat-toolbar color="primary">
   <div class="navbar-container">
+    <button mat-icon-button class="menu-toggle" (click)="toggleSidenav()">
+      <mat-icon>menu</mat-icon>
+    </button>
     <h1 class="app-title">
       <span class="emoji">🐱</span>
       Cat Gallery
     </h1>
-    <nav class="nav-links">
-      <a routerLink="/" mat-button>
-        <mat-icon>home</mat-icon>
-        Home
-      </a>
-    </nav>
   </div>
 </mat-toolbar>

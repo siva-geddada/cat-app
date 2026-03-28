@@ -5,7 +5,12 @@
   </div>
 
   <div class="cats-grid">
-    @if (cats().length === 0) {
+    @if (isLoading()) {
+      <div class="loading">
+        <mat-spinner></mat-spinner>
+        <p>Loading favorites...</p>
+      </div>
+    } @else if (cats().length === 0) {
       <div class="empty-state">
         <mat-icon class="empty-icon">favorite_border</mat-icon>
         <p>No favorites yet. Mark some cats as favorites!</p>
@@ -13,10 +18,17 @@
     } @else {
       @for (cat of cats(); track cat.id) {
         <mat-card class="cat-card">
+          @if (cat.imageUrl) {
+          <img [src]="cat.imageUrl" [alt]="cat.info.name" class="cat-image" />
+          } @else {
+          <div class="cat-image placeholder">
+            <mat-icon>pets</mat-icon>
+          </div>
+          }
           <div class="cat-content">
-            <h3>{{ cat.name }}</h3>
-            <p class="age"><strong>Age:</strong> {{ cat.age }}</p>
-            <p class="description">{{ cat.description }}</p>
+            <h3>{{ cat.info.name }}</h3>
+            <p class="age"><strong>Age:</strong> {{ cat.info.age }}</p>
+            <p class="description">{{ cat.info.description }}</p>
           </div>
           <div class="cat-actions">
             <a [routerLink]="['/cat', cat.id]" mat-button color="accent">

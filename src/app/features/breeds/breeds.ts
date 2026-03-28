@@ -7,7 +7,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { RouterLink } from '@angular/router';
-import { CatService, Cat } from '../../core/service';
+import { CatService, NotificationService } from '../../core/service';
+import { Cat, CatApiResponse } from '../../shared/models/cat.model';
 
 @Component({
   selector: 'app-breeds',
@@ -28,9 +29,9 @@ import { CatService, Cat } from '../../core/service';
 })
 export class Breeds {
   private readonly catService = inject(CatService);
-  private readonly snackBar = inject(MatSnackBar);
+  private readonly notify = inject(NotificationService);
 
-  cats = signal<Cat[]>([]);
+  cats = signal<CatApiResponse[]>([]);
   isLoading = signal(false);
 
   constructor() {
@@ -41,11 +42,11 @@ export class Breeds {
     this.isLoading.set(true);
     this.catService.getAllCats().subscribe({
       next: (cats) => {
-        this.cats.set(cats);
+        this.cats.set(this.catService.assignImageUrl(cats?.data));
         this.isLoading.set(false);
       },
       error: () => {
-        this.snackBar.open('Failed to load breeds', 'Close', { duration: 3000 });
+        this.notify.show('Failed to load breeds');
         this.isLoading.set(false);
       }
     });

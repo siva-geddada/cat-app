@@ -21,4 +21,12 @@
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
+  margin-left: 280px;
+}
+
+/* Mobile responsive styles */
+@media (max-width: 768px) {
+  .page-content {
+    margin-left: 0;
+  }
 }

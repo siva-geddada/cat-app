@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
@@ -11,4 +11,14 @@ import { MatIconModule } from '@angular/material/icon';
   styleUrl: './sidenav.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class Sidenav {}
+export class Sidenav {
+  isOpen = signal(false);
+
+  toggleSidenav() {
+    this.isOpen.update(open => !open);
+  }
+
+  closeSidenav() {
+    this.isOpen.set(false);
+  }
+}

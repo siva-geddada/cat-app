@@ -9,7 +9,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CatService, Cat } from '../../core/service';
+import { CatService, NotificationService } from '../../core/service';
+import { Cat } from '../../shared/models/cat.model';
 
 @Component({
   selector: 'app-cat-detail',
@@ -34,7 +35,7 @@ export class CatDetailComponent {
   private readonly fb = inject(FormBuilder);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
-  private readonly snackBar = inject(MatSnackBar);
+  private readonly notify = inject(NotificationService);
 
   cat = signal<Cat | null>(null);
   isLoading = signal(false);
@@ -66,7 +67,7 @@ export class CatDetailComponent {
         this.isLoading.set(false);
       },
       error: () => {
-        this.snackBar.open('Failed to load cat', 'Close', { duration: 3000 });
+        this.notify.show('Failed to load cat');
         this.isLoading.set(false);
       }
     });
@@ -81,10 +82,10 @@ export class CatDetailComponent {
       next: (updatedCat) => {
         this.cat.set(updatedCat);
         this.isUpdating.set(false);
-        this.snackBar.open('Cat updated successfully!', 'Close', { duration: 3000 });
+        this.notify.show('Cat updated successfully!');
       },
       error: () => {
-        this.snackBar.open('Failed to update cat', 'Close', { duration: 3000 });
+        this.notify.show('Failed to update cat');
         this.isUpdating.set(false);
       }
     });

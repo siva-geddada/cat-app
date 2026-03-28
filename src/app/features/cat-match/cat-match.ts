@@ -6,7 +6,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { CatService, Cat } from '../../core/service';
+import { CatService, NotificationService } from '../../core/service';
+import { Cat } from '../../shared/models/cat.model';
 
 @Component({
   selector: 'app-cat-match',
@@ -26,7 +27,7 @@ import { CatService, Cat } from '../../core/service';
 })
 export class CatMatch {
   private readonly catService = inject(CatService);
-  private readonly snackBar = inject(MatSnackBar);
+  private readonly notify = inject(NotificationService);
 
   cats = signal<Cat[]>([]);
   currentIndex = signal(0);
@@ -45,7 +46,7 @@ export class CatMatch {
         this.isLoading.set(false);
       },
       error: () => {
-        this.snackBar.open('Failed to load cats', 'Close', { duration: 3000 });
+        this.notify.show('Failed to load cats');
         this.isLoading.set(false);
       }
     });
@@ -55,7 +56,7 @@ export class CatMatch {
     const currentCat = this.cats()[this.currentIndex()];
     this.matchedCats.update(cats => [...cats, currentCat]);
     this.nextCat();
-    this.snackBar.open(`You liked ${currentCat.name}! 💕`, 'Close', { duration: 2000 });
+    this.notify.show(`You liked ${currentCat.name}! 💕`, 2000);
   }
 
   onDislike(): void {
@@ -65,7 +66,7 @@ export class CatMatch {
   nextCat(): void {
     const next = this.currentIndex() + 1;
     if (next >= this.cats().length) {
-      this.snackBar.open('No more cats! Check your matches.', 'Close', { duration: 3000 });
+      this.notify.show('No more cats! Check your matches.');
     } else {
       this.currentIndex.set(next);
     }

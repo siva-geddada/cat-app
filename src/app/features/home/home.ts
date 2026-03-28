@@ -7,9 +7,11 @@ import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterLink } from '@angular/router';
-import { CatService, Cat } from '../../core/service';
+import { CatApiResponse, CatApiListResponse } from '../../shared/models/cat.model';
+import { CatService } from '../../core/service/cat.service';
+import { NotificationService } from '../../core/service/notification.service';
 
 @Component({
   selector: 'app-home',
@@ -23,19 +25,19 @@ import { CatService, Cat } from '../../core/service';
     MatCardModule,
     MatProgressSpinnerModule,
     MatIconModule,
-    MatSnackBarModule,
-    RouterLink
+    MatTooltipModule,
+    RouterLink,
   ],
   templateUrl: './home.html',
   styleUrl: './home.css',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent {
   private readonly catService = inject(CatService);
   private readonly fb = inject(FormBuilder);
-  private readonly snackBar = inject(MatSnackBar);
+  private readonly notify = inject(NotificationService);
 
-  cats = signal<Cat[]>([]);
+  cats = signal<CatApiResponse[]>([]);
   isLoading = signal(false);
   isCreating = signal(false);
   deletingIds = signal<Set<string>>(new Set());
@@ -43,7 +45,7 @@ export class HomeComponent {
   createForm = this.fb.group({
     name: ['', [Validators.required]],
     age: ['', [Validators.required]],
-    description: ['', [Validators.required]]
+    description: ['', [Validators.required]],
   });
 
   isDeleting = (catId: string) => this.deletingIds().has(catId);
@@ -55,17 +57,14 @@ export class HomeComponent {
   loadCats(): void {
     this.isLoading.set(true);
     this.catService.getAllCats().subscribe({
-      next: (cats) => {
-        console.log('Home component received cats:', cats);
-        this.cats.set(cats);
-        console.log('Signal updated, cats():', this.cats());
+      next: (response: CatApiListResponse) => {
+        this.cats.set(this.catService.assignImageUrl(response.data ?? []));
         this.isLoading.set(false);
       },
-      error: (error) => {
-        console.error('Home load error:', error);
-        this.snackBar.open('Failed to load cats', 'Close', { duration: 3000 });
+      error: () => {
+        this.notify.show('Failed to load cats');
         this.isLoading.set(false);
-      }
+      },
     });
   }
 
@@ -73,17 +72,18 @@ export class HomeComponent {
     if (!this.createForm.valid) return;
 
     this.isCreating.set(true);
-    this.catService.createCat(this.createForm.value as any).subscribe({
-      next: (newCat) => {
-        this.cats.update(cats => [...cats, newCat]);
+    const { name, age, description } = this.createForm.value;
+    this.catService.createCat({ name: name!, age: age!, description: description! }).subscribe({
+      next: (newCat: CatApiResponse) => {
+        this.cats.update((cats) => [...cats, newCat]);
         this.createForm.reset();
         this.isCreating.set(false);
-        this.snackBar.open('Cat created successfully!', 'Close', { duration: 3000 });
+        this.notify.show('Cat created successfully!');
       },
       error: () => {
-        this.snackBar.open('Failed to create cat', 'Close', { duration: 3000 });
+        this.notify.show('Failed to create cat');
         this.isCreating.set(false);
-      }
+      },
     });
   }
 
@@ -94,18 +94,18 @@ export class HomeComponent {
 
     this.catService.deleteCat(catId).subscribe({
       next: () => {
-        this.cats.update(cats => cats.filter(c => c.id !== catId));
-        this.snackBar.open('Cat deleted successfully!', 'Close', { duration: 3000 });
+        this.cats.update((cats) => cats.filter((c) => c.id !== catId));
+        this.notify.show('Cat deleted successfully!');
         const updatedIds = new Set(this.deletingIds());
         updatedIds.delete(catId);
         this.deletingIds.set(updatedIds);
       },
       error: () => {
-        this.snackBar.open('Failed to delete cat', 'Close', { duration: 3000 });
+        this.notify.show('Failed to delete cat');
         const updatedIds = new Set(this.deletingIds());
         updatedIds.delete(catId);
         this.deletingIds.set(updatedIds);
-      }
+      },
     });
   }
 }

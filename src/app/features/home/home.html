@@ -51,20 +51,28 @@
         <div class="cats-grid">
           @for (cat of cats(); track cat.id) {
             <mat-card class="cat-card">
+              @if (cat.imageUrl) {
+                <img [src]="cat.imageUrl" [alt]="cat.info.name" class="cat-image" />
+              } @else {
+                <div class="cat-image placeholder">
+                  <mat-icon>pets</mat-icon>
+                </div>
+              }
               <div class="cat-content">
-                <h3>{{ cat.name }}</h3>
-                <p class="age"><strong>Age:</strong> {{ cat.age }}</p>
-                <p class="description">{{ cat.description }}</p>
+                <h3>{{ cat.info.name }}</h3>
+                <p class="age"><strong>Age:</strong> {{ cat.info.age }}</p>
+                <p class="description">{{ cat.info.description }}</p>
               </div>
               <div class="cat-actions">
-                <a [routerLink]="['/cat', cat.id]" mat-button color="accent">
-                  View & Edit
+                <a [routerLink]="['/cat', cat.id]" mat-button color="accent" matTooltip="Edit cat">
+                  Edit
                 </a>
                 <button
                   mat-icon-button
                   color="warn"
                   (click)="onDeleteCat(cat.id)"
-                  [disabled]="isDeleting(cat.id)">
+                  [disabled]="isDeleting(cat.id)"
+                  matTooltip="Delete cat">
                   <mat-icon>delete</mat-icon>
                 </button>
               </div>

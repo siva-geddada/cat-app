@@ -4,9 +4,11 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterLink } from '@angular/router';
-import { CatService, Cat } from '../../core/service';
+import { CatService, NotificationService } from '../../core/service';
+import { Cat, CatApiResponse } from '../../shared/models/cat.model';
 
 @Component({
   selector: 'app-gallery',
@@ -18,6 +20,7 @@ import { CatService, Cat } from '../../core/service';
     MatIconModule,
     MatProgressSpinnerModule,
     MatSnackBarModule,
+    MatTooltipModule,
     RouterLink
   ],
   templateUrl: './gallery.html',
@@ -26,9 +29,9 @@ import { CatService, Cat } from '../../core/service';
 })
 export class Gallery {
   private readonly catService = inject(CatService);
-  private readonly snackBar = inject(MatSnackBar);
+  private readonly notify = inject(NotificationService);
 
-  cats = signal<Cat[]>([]);
+  cats = signal<CatApiResponse[]>([]);
   isLoading = signal(false);
   favoritedIds = signal<Set<string>>(new Set());
 
@@ -41,11 +44,11 @@ export class Gallery {
     this.isLoading.set(true);
     this.catService.getAllCats().subscribe({
       next: (cats) => {
-        this.cats.set(cats);
+        this.cats.set(this.catService.assignImageUrl(cats?.data));
         this.isLoading.set(false);
       },
       error: () => {
-        this.snackBar.open('Failed to load gallery', 'Close', { duration: 3000 });
+        this.notify.show('Failed to load gallery');
         this.isLoading.set(false);
       }
     });

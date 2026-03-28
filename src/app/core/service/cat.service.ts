@@ -1,100 +1,44 @@
+import { CatApiResponse, CreateCatRequest } from './../../shared/models/cat.model';
 import { Injectable, inject } from '@angular/core';
-import { HttpService, ApiResponse } from './http.service';
-import { map, catchError } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { HttpService } from './http.service';
+import { CatImageService } from './cat-image.service';
 
-export interface Cat {
-  id: string;
-  name: string;
-  age: string;
-  description: string;
-}
 
-export interface CreateCatRequest {
-  name: string;
-  age: string;
-  description: string;
-}
+
 
 @Injectable({ providedIn: 'root' })
 export class CatService {
   private readonly httpService = inject(HttpService);
+  private readonly catImageService = inject(CatImageService);
   private readonly baseUrl = '/api';
 
+  assignImageUrl(cats: CatApiResponse[]): CatApiResponse[] {
+    return cats.map((cat, index) => ({
+      ...cat,
+      imageUrl: cat.imageUrl || `https://cataas.com/cat?id=${cat.id || index}&width=600&height=400`
+    }));
+  }
+
+
   getAllCats() {
-    return this.httpService.get<any>(`${this.baseUrl}/list`)
-      .pipe(
-        map(response => {
-          console.log('API Response:', response);
-          // Handle both wrapped and direct responses
-          if (response?.data) {
-            const data = Array.isArray(response.data) ? response.data : [];
-            console.log('Extracted data:', data);
-            return data;
-          } else if (Array.isArray(response)) {
-            console.log('Direct array:', response);
-            return response;
-          }
-          console.log('Empty array returned');
-          return [];
-        }),
-        catchError(error => {
-          console.error('API Error:', error);
-          return of([]);
-        })
-      );
+    return this.httpService.get<any>(`${this.baseUrl}/list`);
   }
 
   getCatById(id: string) {
-    return this.httpService.get<any>(`${this.baseUrl}/list?id=${id}`)
-      .pipe(
-        map(response => {
-          if (response?.data) {
-            return response.data;
-          }
-          return response;
-        })
-      );
+    return this.httpService.get<any>(`${this.baseUrl}/list?id=${id}`);
   }
 
   getMultipleCats(ids: string[]) {
     const idString = ids.join(',');
-    return this.httpService.get<any>(`${this.baseUrl}/list?id=${idString}`)
-      .pipe(
-        map(response => {
-          if (response?.data) {
-            return Array.isArray(response.data) ? response.data : [];
-          } else if (Array.isArray(response)) {
-            return response;
-          }
-          return [];
-        }),
-        catchError(() => of([]))
-      );
+    return this.httpService.get<any>(`${this.baseUrl}/list?id=${idString}`);
   }
 
   createCat(cat: CreateCatRequest) {
-    return this.httpService.post<any>(`${this.baseUrl}/create`, cat)
-      .pipe(
-        map(response => {
-          if (response?.data) {
-            return response.data;
-          }
-          return response;
-        })
-      );
+    return this.httpService.post<any>(`${this.baseUrl}/create`, cat);
   }
 
   updateCat(id: string, cat: CreateCatRequest) {
-    return this.httpService.put<any>(`${this.baseUrl}/update?id=${id}`, cat)
-      .pipe(
-        map(response => {
-          if (response?.data) {
-            return response.data;
-          }
-          return response;
-        })
-      );
+    return this.httpService.put<any>(`${this.baseUrl}/update?id=${id}`, cat);
   }
 
   deleteCat(id: string) {

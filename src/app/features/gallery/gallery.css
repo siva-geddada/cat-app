@@ -31,6 +31,22 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  overflow: hidden;
+}
+
+.cat-image {
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
+}
+
+.cat-image.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #e0e7ff 0%, #f0e7ff 100%);
+  color: #6366f1;
+  font-size: 3rem;
 }
 
 .cat-content {
