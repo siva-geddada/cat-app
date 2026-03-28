@@ -26,5 +26,4 @@ export interface CreateCatRequest {
   name: string;
   age: string;
   description: string;
-  imageUrl?: string;
 }

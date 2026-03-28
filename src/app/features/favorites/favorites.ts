@@ -1,24 +1,20 @@
 import { Component, ChangeDetectionStrategy, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatCardModule } from '@angular/material/card';
-import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterLink } from '@angular/router';
 import { CatService, NotificationService } from '../../core/service';
-import { Cat, CatApiResponse } from '../../shared/models/cat.model';
+import { CatApiResponse } from '../../shared/models/cat.model';
 
 @Component({
   selector: 'app-favorites',
   standalone: true,
   imports: [
     CommonModule,
-    MatCardModule,
-    MatButtonModule,
     MatIconModule,
-    MatSnackBarModule,
     MatProgressSpinnerModule,
+    MatTooltipModule,
     RouterLink,
   ],
   templateUrl: './favorites.html',

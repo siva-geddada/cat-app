@@ -1,64 +1,158 @@
-<div class="max-w-lg mx-auto px-6 py-8">
+<div class="match-page">
 
-  <div class="mb-8 text-center">
-    <h1 class="text-3xl font-bold text-slate-800 tracking-tight">💕 Cat Match</h1>
-    <p class="text-slate-500 mt-1">Like or pass to find your perfect cat</p>
+  <!-- Header -->
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Cat Match</h1>
+      <p class="page-subtitle">Swipe right to like, left to pass — or use arrow keys</p>
+    </div>
+    @if (!isLoading() && cats().length > 0 && !isDone()) {
+      <span class="progress-chip">{{ currentIndex() + 1 }} / {{ cats().length }}</span>
+    }
   </div>
 
+  <!-- Loading -->
   @if (isLoading()) {
     <div class="state-center">
-      <mat-spinner diameter="40"></mat-spinner>
-      <p class="text-sm">Loading cats…</p>
+      <mat-spinner diameter="36"></mat-spinner>
+      <p class="state-label">Loading cats…</p>
     </div>
-  } @else if (currentCat) {
-    <div class="flex flex-col gap-5">
 
-      <!-- Progress -->
-      <div class="flex items-center gap-3">
-        <mat-progress-bar mode="determinate" [value]="progress" class="flex-1 rounded-full"></mat-progress-bar>
-        <span class="text-xs text-slate-400 whitespace-nowrap">{{ currentIndex() + 1 }} / {{ cats().length }}</span>
+  <!-- No cats -->
+  } @else if (cats().length === 0) {
+    <div class="empty-state">
+      <div class="empty-icon">🐱</div>
+      <h3 class="empty-title">No cats to match</h3>
+      <p class="empty-sub">Add some cats on the Home screen first</p>
+      <a routerLink="/" class="action-btn primary-btn">
+        <mat-icon>add</mat-icon> Go to Home
+      </a>
+    </div>
+
+  <!-- Done screen -->
+  } @else if (isDone()) {
+    <div class="done-screen">
+      <div class="done-hero">
+        <span class="done-emoji">🎉</span>
+        <h2 class="done-title">You've seen all cats!</h2>
+        <p class="done-sub">
+          <strong class="like-count">{{ likedCats().length }}</strong> liked ·
+          <strong class="pass-count">{{ passedCats().length }}</strong> passed
+        </p>
+        <div class="done-actions">
+          <button class="action-btn outline-btn" (click)="showMatches.set(!showMatches())">
+            <mat-icon>favorite</mat-icon>
+            {{ showMatches() ? 'Hide' : 'View' }} Matches ({{ likedCats().length }})
+          </button>
+          <button class="action-btn primary-btn" (click)="restart()">
+            <mat-icon>refresh</mat-icon> Play Again
+          </button>
+        </div>
       </div>
 
-      <!-- Cat card -->
-      <mat-card class="overflow-hidden">
-        <div class="match-hero">
-          <mat-icon class="match-hero-icon">pets</mat-icon>
-        </div>
-        <div class="p-6">
-          <h2 class="text-2xl font-bold text-slate-800 mb-1">{{ currentCat.name }}</h2>
-          <p class="text-xs text-indigo-500 font-semibold mb-3">🎂 {{ currentCat.age }}</p>
-          <p class="text-sm text-slate-500 leading-relaxed">{{ currentCat.description }}</p>
-        </div>
-      </mat-card>
-
-      <!-- Actions -->
-      <div class="flex gap-4">
-        <button mat-stroked-button color="warn" (click)="onDislike()" class="match-action-btn">
-          <mat-icon>close</mat-icon> Pass
-        </button>
-        <button mat-raised-button color="primary" (click)="onLike()" class="match-action-btn">
-          <mat-icon>favorite</mat-icon> Like
-        </button>
-      </div>
-
-      <!-- Match count -->
-      @if (matchedCats().length > 0) {
-        <div class="matches-badge">
-          <mat-icon style="font-size:18px;width:18px;height:18px">favorite</mat-icon>
-          {{ matchedCats().length }} match{{ matchedCats().length !== 1 ? 'es' : '' }} so far!
+      <!-- Matched cats grid -->
+      @if (showMatches() && likedCats().length > 0) {
+        <div class="matches-section">
+          <h3 class="matches-title">Your Matches ❤️</h3>
+          <div class="matches-grid">
+            @for (cat of likedCats(); track cat.id) {
+              <div class="match-card">
+                @if (cat.imageUrl) {
+                  <img [src]="cat.imageUrl" [alt]="cat.info.name" class="match-card-img" />
+                } @else {
+                  <div class="match-card-placeholder">🐱</div>
+                }
+                <div class="match-card-body">
+                  <p class="match-cat-name">{{ cat.info.name }}</p>
+                  <p class="match-cat-age">{{ cat.info.age }}</p>
+                </div>
+                <a [routerLink]="['/cat', cat.id]" class="match-card-link">
+                  View <mat-icon>arrow_forward</mat-icon>
+                </a>
+              </div>
+            }
+          </div>
         </div>
       }
     </div>
 
+  <!-- Swipe screen -->
   } @else {
-    <div class="state-center page-card text-center">
-      <span class="text-5xl">🎉</span>
-      <p class="font-semibold text-slate-700 text-lg">You've seen all cats!</p>
-      @if (matchedCats().length > 0) {
-        <p class="text-slate-500 text-sm">You matched with <strong>{{ matchedCats().length }}</strong> cat(s)</p>
-      } @else {
-        <p class="text-slate-400 text-sm">No matches this time — try again!</p>
+    <div class="swipe-area">
+
+      <!-- Progress bar -->
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-track">
+          <div class="progress-bar-fill" [style.width.%]="progress()"></div>
+        </div>
+      </div>
+
+      <!-- Card stack -->
+      <div class="card-stack">
+
+        <!-- Next card (peeking behind) -->
+        @if (cats()[currentIndex() + 1]) {
+          <div class="swipe-card swipe-card-back">
+            @if (cats()[currentIndex() + 1].imageUrl) {
+              <img [src]="cats()[currentIndex() + 1].imageUrl"
+                   [alt]="cats()[currentIndex() + 1].info.name"
+                   class="swipe-card-img" />
+            } @else {
+              <div class="swipe-card-placeholder">🐱</div>
+            }
+          </div>
+        }
+
+        <!-- Active card -->
+        <div class="swipe-card swipe-card-front"
+             [class.swipe-like]="swipeDir() === 'like'"
+             [class.swipe-pass]="swipeDir() === 'pass'">
+
+          <!-- Like / Pass stamp -->
+          <div class="stamp stamp-like" [class.stamp-visible]="swipeDir() === 'like'">LIKE</div>
+          <div class="stamp stamp-pass" [class.stamp-visible]="swipeDir() === 'pass'">PASS</div>
+
+          @if (currentCat()!.imageUrl) {
+            <img [src]="currentCat()!.imageUrl"
+                 [alt]="currentCat()!.info.name"
+                 class="swipe-card-img" />
+          } @else {
+            <div class="swipe-card-placeholder">🐱</div>
+          }
+
+          <div class="swipe-card-body">
+            <div class="swipe-card-top">
+              <h2 class="swipe-cat-name">{{ currentCat()!.info.name }}</h2>
+              <span class="swipe-age-badge">{{ currentCat()!.info.age }}</span>
+            </div>
+            <p class="swipe-cat-desc">{{ currentCat()!.info.description }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action buttons -->
+      <div class="swipe-actions">
+        <button class="swipe-btn pass-btn" (click)="onPass()" title="Pass (←)">
+          <mat-icon>close</mat-icon>
+        </button>
+        <div class="swipe-hint">
+          <span>← Pass</span>
+          <span>Like →</span>
+        </div>
+        <button class="swipe-btn like-btn" (click)="onLike()" title="Like (→)">
+          <mat-icon>favorite</mat-icon>
+        </button>
+      </div>
+
+      <!-- Live match counter -->
+      @if (likedCats().length > 0) {
+        <div class="live-badge">
+          <mat-icon>favorite</mat-icon>
+          {{ likedCats().length }} match{{ likedCats().length !== 1 ? 'es' : '' }}
+        </div>
       }
+
     </div>
   }
+
 </div>

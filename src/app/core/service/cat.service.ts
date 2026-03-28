@@ -9,7 +9,6 @@ import { CatImageService } from './cat-image.service';
 @Injectable({ providedIn: 'root' })
 export class CatService {
   private readonly httpService = inject(HttpService);
-  private readonly catImageService = inject(CatImageService);
   private readonly baseUrl = '/api';
 
   assignImageUrl(cats: CatApiResponse[]): CatApiResponse[] {

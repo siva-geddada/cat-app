@@ -1,28 +1,15 @@
-import { Component, ChangeDetectionStrategy, signal, inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy, signal, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatListModule } from '@angular/material/list';
-import { MatCardModule } from '@angular/material/card';
-import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { RouterLink } from '@angular/router';
 import { CatService, NotificationService } from '../../core/service';
-import { Cat, CatApiResponse } from '../../shared/models/cat.model';
+import { CatApiResponse, CatApiListResponse } from '../../shared/models/cat.model';
 
 @Component({
   selector: 'app-breeds',
   standalone: true,
-  imports: [
-    CommonModule,
-    MatListModule,
-    MatCardModule,
-    MatDividerModule,
-    MatIconModule,
-    MatProgressSpinnerModule,
-    MatSnackBarModule,
-    RouterLink
-  ],
+  imports: [CommonModule, MatIconModule, MatProgressSpinnerModule, RouterLink],
   templateUrl: './breeds.html',
   styleUrl: './breeds.css',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -33,16 +20,25 @@ export class Breeds {
 
   cats = signal<CatApiResponse[]>([]);
   isLoading = signal(false);
+  query = signal('');
 
-  constructor() {
-    this.loadCats();
-  }
+  readonly filtered = computed(() => {
+    const q = this.query().toLowerCase().trim();
+    if (!q) return this.cats();
+    return this.cats().filter(c =>
+      c.info.name.toLowerCase().includes(q) ||
+      c.info.age.toLowerCase().includes(q) ||
+      c.info.description.toLowerCase().includes(q)
+    );
+  });
+
+  constructor() { this.loadCats(); }
 
   loadCats(): void {
     this.isLoading.set(true);
     this.catService.getAllCats().subscribe({
-      next: (cats) => {
-        this.cats.set(this.catService.assignImageUrl(cats?.data));
+      next: (response: CatApiListResponse) => {
+        this.cats.set(this.catService.assignImageUrl(response?.data ?? []));
         this.isLoading.set(false);
       },
       error: () => {

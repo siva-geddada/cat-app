@@ -1,38 +1,61 @@
 .sidenav {
   position: fixed;
   left: 0;
-  top: 64px;
-  width: 260px;
-  height: calc(100vh - 64px);
-  background: #ffffff;
-  padding: 16px 12px;
-  border-right: 1px solid #e2e8f0;
+  top: 0;
+  width: 240px;
+  height: 100vh;
+  background: #0f172a;
   z-index: 40;
-  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
-.nav-section-label {
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-  color: #94a3b8;
-  padding: 8px 12px 4px;
-  margin-bottom: 4px;
+/* ── Brand ── */
+.sidenav-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 22px 20px 18px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  flex-shrink: 0;
 }
 
+.brand-logo {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.brand-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: #f8fafc;
+  letter-spacing: -0.2px;
+}
+
+/* ── Nav ── */
 .nav-menu {
+  flex: 1;
   display: flex;
   flex-direction: column;
   gap: 2px;
+  padding: 16px 12px;
+  overflow-y: auto;
 }
 
 .nav-link {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 11px 14px;
-  color: #64748b;
+  gap: 11px;
+  padding: 10px 12px;
+  color: #94a3b8;
   text-decoration: none;
   border-radius: 10px;
   font-weight: 500;
@@ -42,42 +65,130 @@
 }
 
 .nav-link mat-icon {
-  font-size: 20px;
-  width: 20px;
-  height: 20px;
-  opacity: 0.7;
+  font-size: 19px;
+  width: 19px;
+  height: 19px;
+  flex-shrink: 0;
 }
 
 .nav-link:hover {
-  background: #f1f5f9;
-  color: #6366f1;
-}
-
-.nav-link:hover mat-icon {
-  opacity: 1;
+  background: rgba(255,255,255,0.06);
+  color: #e2e8f0;
 }
 
 .nav-link.active {
-  background: #eef2ff;
-  color: #6366f1;
+  background: #6366f1;
+  color: #ffffff;
   font-weight: 600;
+  box-shadow: 0 4px 12px rgba(99,102,241,0.4);
 }
 
-.nav-link.active mat-icon {
-  opacity: 1;
+/* ── Footer ── */
+.sidenav-footer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  flex-shrink: 0;
 }
 
+.footer-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  flex-shrink: 0;
+}
+
+.footer-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.footer-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #e2e8f0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.footer-role {
+  font-size: 11px;
+  color: #64748b;
+}
+
+.footer-more {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  color: #475569;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* ── Mobile overlay ── */
+.mobile-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 38;
+  backdrop-filter: blur(2px);
+}
+
+/* ── Mobile FAB ── */
+.mobile-fab {
+  display: none;
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: #6366f1;
+  color: white;
+  border: none;
+  cursor: pointer;
+  z-index: 50;
+  box-shadow: 0 4px 20px rgba(99,102,241,0.5);
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.mobile-fab:hover {
+  background: #4f46e5;
+  transform: scale(1.05);
+}
+
+.mobile-fab mat-icon {
+  font-size: 22px;
+  width: 22px;
+  height: 22px;
+}
+
+/* ── Mobile ── */
 @media (max-width: 768px) {
   .sidenav {
-    display: none;
     transform: translateX(-100%);
-    transition: transform 0.25s ease;
-    box-shadow: 4px 0 24px rgba(0,0,0,0.1);
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 999;
   }
 
   .sidenav.open {
-    display: block;
     transform: translateX(0);
+  }
+
+  .mobile-fab {
+    display: flex;
   }
 }

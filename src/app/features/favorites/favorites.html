@@ -1,45 +1,87 @@
-<div class="max-w-7xl mx-auto px-6 py-8">
+<div class="page">
 
-  <div class="mb-8">
-    <h1 class="text-3xl font-bold text-slate-800 tracking-tight">❤️ My Favourites</h1>
-    <p class="text-slate-500 mt-1">Your personal collection of loved cats</p>
+  <!-- Header -->
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Favourites</h1>
+      <p class="page-subtitle">Your personal collection of loved cats</p>
+    </div>
+    @if (!isLoading() && cats().length > 0) {
+      <span class="count-chip">
+        <mat-icon>favorite</mat-icon>
+        {{ cats().length }} saved
+      </span>
+    }
   </div>
 
+  <!-- Loading -->
   @if (isLoading()) {
     <div class="state-center">
-      <mat-spinner diameter="40"></mat-spinner>
-      <p class="text-sm">Loading favourites…</p>
+      <mat-spinner diameter="36"></mat-spinner>
+      <p class="state-label">Loading favourites…</p>
     </div>
+
+  <!-- Empty -->
   } @else if (cats().length === 0) {
-    <div class="state-center page-card max-w-sm mx-auto">
-      <mat-icon class="fav-empty-icon">favorite_border</mat-icon>
-      <p class="font-medium text-slate-600">No favourites yet</p>
-      <p class="text-sm text-slate-400">Head to the Gallery and heart some cats!</p>
+    <div class="empty-state">
+      <div class="empty-icon-wrap">❤️</div>
+      <h3 class="empty-title">No favourites yet</h3>
+      <p class="empty-sub">Head to the Gallery and heart some cats!</p>
+      <a routerLink="/gallery" class="browse-btn">
+        <mat-icon>collections</mat-icon>
+        Browse Gallery
+      </a>
     </div>
+
+  <!-- Grid -->
   } @else {
     <div class="cats-grid">
       @for (cat of cats(); track cat.id) {
-        <mat-card class="overflow-hidden flex flex-col">
-          @if (cat.imageUrl) {
-            <img [src]="cat.imageUrl" [alt]="cat.info.name" class="w-full h-48 object-cover" />
-          } @else {
-            <div class="cat-placeholder">
-              <mat-icon style="font-size:40px;width:40px;height:40px">pets</mat-icon>
+        <div class="cat-card">
+
+          <!-- Image + overlay -->
+          <div class="cat-card-image-wrap">
+            @if (cat.imageUrl) {
+              <img [src]="cat.imageUrl" [alt]="cat.info.name" class="cat-card-image" />
+            } @else {
+              <div class="cat-card-image-placeholder">🐱</div>
+            }
+            <div class="card-overlay">
+              <a [routerLink]="['/cat', cat.id]" class="overlay-btn edit-btn" matTooltip="Edit">
+                <mat-icon>edit</mat-icon>
+              </a>
+              <button class="overlay-btn remove-btn"
+                      (click)="onRemoveFavorite(cat.id)"
+                      matTooltip="Remove favourite">
+                <mat-icon>heart_broken</mat-icon>
+              </button>
             </div>
-          }
-          <div class="p-4 flex flex-col flex-1">
-            <h3 class="font-semibold text-slate-800 text-base mb-1">{{ cat.info.name }}</h3>
-            <p class="text-xs text-indigo-500 font-medium mb-2">🎂 {{ cat.info.age }}</p>
-            <p class="text-sm text-slate-500 leading-relaxed flex-1">{{ cat.info.description }}</p>
           </div>
-          <div class="px-4 py-3 flex items-center justify-between border-t border-slate-100">
-            <a [routerLink]="['/cat', cat.id]" mat-button color="primary">View & Edit</a>
-            <button mat-icon-button color="warn" (click)="onRemoveFavorite(cat.id)" matTooltip="Remove favourite">
+
+          <!-- Body -->
+          <div class="cat-card-body">
+            <div class="cat-card-top">
+              <h3 class="cat-name">{{ cat.info.name }}</h3>
+              <span class="cat-age-badge">{{ cat.info.age }}</span>
+            </div>
+            <p class="cat-desc">{{ cat.info.description }}</p>
+          </div>
+
+          <!-- Footer -->
+          <div class="cat-card-footer">
+            <a [routerLink]="['/cat', cat.id]" class="card-link-btn">
+              View details <mat-icon>arrow_forward</mat-icon>
+            </a>
+            <button class="remove-icon-btn"
+                    (click)="onRemoveFavorite(cat.id)"
+                    matTooltip="Remove favourite">
               <mat-icon>favorite</mat-icon>
             </button>
           </div>
-        </mat-card>
+
+        </div>
       }
     </div>
   }
+
 </div>

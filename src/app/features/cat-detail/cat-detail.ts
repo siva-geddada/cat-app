@@ -10,7 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CatService, NotificationService } from '../../core/service';
-import { Cat } from '../../shared/models/cat.model';
+import { CatApiResponse } from '../../shared/models/cat.model';
 
 @Component({
   selector: 'app-cat-detail',
@@ -37,7 +37,7 @@ export class CatDetailComponent {
   private readonly router = inject(Router);
   private readonly notify = inject(NotificationService);
 
-  cat = signal<Cat | null>(null);
+  cat = signal<CatApiResponse | null>(null);
   isLoading = signal(false);
   isUpdating = signal(false);
 
@@ -57,12 +57,23 @@ export class CatDetailComponent {
 
     this.isLoading.set(true);
     this.catService.getCatById(id).subscribe({
-      next: (cat) => {
-        this.cat.set(cat);
+      next: (response: any) => {
+        // API returns { data: cat } or { data: [cat] } — normalise both
+        const raw: CatApiResponse = Array.isArray(response?.data)
+          ? response.data[0]
+          : (response?.data ?? response);
+
+        if (!raw?.info) {
+          this.notify.show('Cat data is missing');
+          this.isLoading.set(false);
+          return;
+        }
+
+        this.cat.set(raw);
         this.updateForm.patchValue({
-          name: cat.name,
-          age: cat.age,
-          description: cat.description
+          name: raw.info.name,
+          age: raw.info.age,
+          description: raw.info.description
         });
         this.isLoading.set(false);
       },
@@ -78,8 +89,9 @@ export class CatDetailComponent {
     if (!this.updateForm.valid || !catId) return;
 
     this.isUpdating.set(true);
-    this.catService.updateCat(catId, this.updateForm.value as any).subscribe({
-      next: (updatedCat) => {
+    const { name, age, description } = this.updateForm.value;
+    this.catService.updateCat(catId, { name: name!, age: age!, description: description! }).subscribe({
+      next: (updatedCat: CatApiResponse) => {
         this.cat.set(updatedCat);
         this.isUpdating.set(false);
         this.notify.show('Cat updated successfully!');

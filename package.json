@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "concurrently \"node dev-proxy.js\" \"ng serve\"",
+    "proxy": "node dev-proxy.js",
+    "dev": "concurrently \"node dev-proxy.js\" \"ng serve\"",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
@@ -40,6 +42,8 @@
     "@angular/cli": "^21.1.4",
     "@angular/compiler-cli": "^21.1.0",
     "@tailwindcss/postcss": "^4.1.12",
+    "concurrently": "^9.2.1",
+    "http-proxy-middleware": "^3.0.5",
     "jsdom": "^27.1.0",
     "postcss": "^8.5.3",
     "tailwindcss": "^4.1.12",

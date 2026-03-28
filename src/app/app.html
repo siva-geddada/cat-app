@@ -1,7 +1,29 @@
 <div class="app-layout">
-  <app-navbar></app-navbar>
-  <div class="main-content">
-    <app-sidenav></app-sidenav>
+  <app-sidenav></app-sidenav>
+
+  <div class="content-shell">
+    <!-- Top header bar -->
+    <header class="top-bar">
+      <div class="top-bar-left">
+        <button class="mobile-menu-btn" (click)="toggleSidenav()">
+          <mat-icon>menu</mat-icon>
+        </button>
+        <div class="search-box">
+          <mat-icon class="search-icon">search</mat-icon>
+          <input type="text" placeholder="Search cats…" class="search-input" />
+        </div>
+      </div>
+      <div class="top-bar-right">
+        <button class="icon-btn" matRipple>
+          <mat-icon>notifications_none</mat-icon>
+        </button>
+        <div class="avatar-chip">
+          <span>🐾</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Page content -->
     <main class="page-content">
       <router-outlet></router-outlet>
     </main>

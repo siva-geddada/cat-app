@@ -40,6 +40,7 @@ export class HomeComponent {
   cats = signal<CatApiResponse[]>([]);
   isLoading = signal(false);
   isCreating = signal(false);
+  showForm = signal(false);
   deletingIds = signal<Set<string>>(new Set());
 
   createForm = this.fb.group({
@@ -78,6 +79,7 @@ export class HomeComponent {
         this.cats.update((cats) => [...cats, newCat]);
         this.createForm.reset();
         this.isCreating.set(false);
+        this.showForm.set(false);
         this.notify.show('Cat created successfully!');
       },
       error: () => {

@@ -1,37 +1,96 @@
-<div class="max-w-3xl mx-auto px-6 py-8">
+<div class="breeds-page">
 
-  <div class="mb-8">
-    <h1 class="text-3xl font-bold text-slate-800 tracking-tight">🐾 All Cats</h1>
-    <p class="text-slate-500 mt-1">Explore the complete collection</p>
+  <!-- Header -->
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">All Cats</h1>
+      <p class="page-subtitle">Browse the complete collection</p>
+    </div>
+    @if (!isLoading() && cats().length > 0) {
+      <span class="count-chip">
+        <mat-icon>pets</mat-icon>
+        {{ filtered().length }} of {{ cats().length }}
+      </span>
+    }
   </div>
 
-  @if (isLoading()) {
-    <div class="state-center">
-      <mat-spinner diameter="40"></mat-spinner>
-      <p class="text-sm">Loading cats…</p>
-    </div>
-  } @else if (cats().length === 0) {
-    <div class="state-center page-card">
-      <mat-icon style="font-size:48px;width:48px;height:48px;color:#cbd5e1">pets</mat-icon>
-      <p class="font-medium text-slate-500">No cats found</p>
-    </div>
-  } @else {
-    <div class="page-card p-0 overflow-hidden">
-      <mat-list>
-        @for (cat of cats(); track cat.id; let last = $last) {
-          <mat-list-item class="breeds-item">
-            <div class="breed-avatar" matListItemIcon>
-              <mat-icon>pets</mat-icon>
-            </div>
-            <div matListItemTitle class="font-semibold text-slate-800">{{ cat.info.name }}</div>
-            <div matListItemLine class="text-slate-400 text-sm">{{ cat.info.age }} · {{ cat.info.description | slice:0:60 }}…</div>
-            <a [routerLink]="['/cat', cat.id]" mat-icon-button matListItemMeta class="text-slate-400">
-              <mat-icon>chevron_right</mat-icon>
-            </a>
-          </mat-list-item>
-          @if (!last) { <mat-divider></mat-divider> }
-        }
-      </mat-list>
+  <!-- Search -->
+  @if (!isLoading() && cats().length > 0) {
+    <div class="search-wrap">
+      <mat-icon class="search-icon">search</mat-icon>
+      <input
+        class="search-input"
+        type="text"
+        placeholder="Search by name, age or description…"
+        [value]="query()"
+        (input)="query.set($any($event.target).value)" />
+      @if (query()) {
+        <button class="search-clear" (click)="query.set('')">
+          <mat-icon>close</mat-icon>
+        </button>
+      }
     </div>
   }
+
+  <!-- Loading -->
+  @if (isLoading()) {
+    <div class="state-center">
+      <mat-spinner diameter="36"></mat-spinner>
+      <p class="state-label">Loading cats…</p>
+    </div>
+
+  <!-- Empty source -->
+  } @else if (cats().length === 0) {
+    <div class="empty-state">
+      <div class="empty-icon">🐾</div>
+      <h3 class="empty-title">No cats yet</h3>
+      <p class="empty-sub">Add cats on the Home screen to see them here</p>
+      <a routerLink="/" class="go-btn">
+        <mat-icon>add</mat-icon> Go to Home
+      </a>
+    </div>
+
+  <!-- No search results -->
+  } @else if (filtered().length === 0) {
+    <div class="empty-state">
+      <div class="empty-icon">🔍</div>
+      <h3 class="empty-title">No results for "{{ query() }}"</h3>
+      <p class="empty-sub">Try a different name or description</p>
+      <button class="go-btn outline" (click)="query.set('')">Clear search</button>
+    </div>
+
+  <!-- List -->
+  } @else {
+    <div class="breeds-list">
+      @for (cat of filtered(); track cat.id; let i = $index) {
+        <a [routerLink]="['/cat', cat.id]" class="breed-row">
+
+          <!-- Thumbnail -->
+          <div class="breed-thumb">
+            @if (cat.imageUrl) {
+              <img [src]="cat.imageUrl" [alt]="cat.info.name" class="breed-thumb-img" />
+            } @else {
+              <div class="breed-thumb-placeholder">🐱</div>
+            }
+          </div>
+
+          <!-- Info -->
+          <div class="breed-info">
+            <div class="breed-info-top">
+              <span class="breed-name">{{ cat.info.name }}</span>
+              <span class="breed-age">{{ cat.info.age }}</span>
+            </div>
+            <p class="breed-desc">{{ cat.info.description }}</p>
+          </div>
+
+          <!-- Arrow -->
+          <div class="breed-arrow">
+            <mat-icon>chevron_right</mat-icon>
+          </div>
+
+        </a>
+      }
+    </div>
+  }
+
 </div>

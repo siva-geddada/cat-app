@@ -1,10 +1,8 @@
 {
   "/api": {
-    "target": "https://gps6cdg7h9.execute-api.eu-central-1.amazonaws.com/prod",
+    "target": "http://localhost:4201",
     "secure": false,
-    "pathRewrite": {
-      "^/api": ""
-    },
-    "changeOrigin": true
+    "changeOrigin": false,
+    "pathRewrite": {}
   }
 }

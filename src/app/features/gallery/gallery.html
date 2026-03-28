@@ -1,47 +1,85 @@
-<div class="max-w-7xl mx-auto px-6 py-8">
+<div class="page">
 
-  <div class="mb-8">
-    <h1 class="text-3xl font-bold text-slate-800 tracking-tight">🖼️ Gallery</h1>
-    <p class="text-slate-500 mt-1">Browse and favourite all available cats</p>
+  <!-- Header -->
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Gallery</h1>
+      <p class="page-subtitle">Browse and favourite all available cats</p>
+    </div>
+    @if (!isLoading()) {
+      <span class="count-chip">
+        <mat-icon>collections</mat-icon>
+        {{ cats().length }} cat{{ cats().length !== 1 ? 's' : '' }}
+      </span>
+    }
   </div>
 
+  <!-- Loading -->
   @if (isLoading()) {
     <div class="state-center">
-      <mat-spinner diameter="40"></mat-spinner>
-      <p class="text-sm">Loading gallery…</p>
+      <mat-spinner diameter="36"></mat-spinner>
+      <p class="state-label">Loading gallery…</p>
     </div>
+
+  <!-- Empty -->
   } @else if (cats().length === 0) {
-    <div class="state-center page-card">
-      <mat-icon style="font-size:48px;width:48px;height:48px;color:#cbd5e1">collections</mat-icon>
-      <p class="font-medium text-slate-500">No cats in the gallery yet</p>
+    <div class="empty-state">
+      <div class="empty-icon-wrap">🖼️</div>
+      <h3 class="empty-title">No cats yet</h3>
+      <p class="empty-sub">Cats you add will appear here</p>
     </div>
+
+  <!-- Grid -->
   } @else {
     <div class="cats-grid">
       @for (cat of cats(); track cat.id) {
-        <mat-card class="overflow-hidden flex flex-col">
-          @if (cat.imageUrl) {
-            <img [src]="cat.imageUrl" [alt]="cat.info.name" class="w-full h-48 object-cover" />
-          } @else {
-            <div class="cat-placeholder">
-              <mat-icon style="font-size:40px;width:40px;height:40px">pets</mat-icon>
+        <div class="cat-card">
+
+          <!-- Image + overlay -->
+          <div class="cat-card-image-wrap">
+            @if (cat.imageUrl) {
+              <img [src]="cat.imageUrl" [alt]="cat.info.name" class="cat-card-image" />
+            } @else {
+              <div class="cat-card-image-placeholder">🐱</div>
+            }
+            <div class="card-overlay">
+              <a [routerLink]="['/cat', cat.id]" class="overlay-btn edit-btn" matTooltip="Edit">
+                <mat-icon>edit</mat-icon>
+              </a>
+              <button class="overlay-btn fav-btn"
+                      [class.fav-active]="isFavorited(cat.id)"
+                      (click)="toggleFavorite(cat.id)"
+                      [matTooltip]="isFavorited(cat.id) ? 'Remove favourite' : 'Add to favourites'">
+                <mat-icon>{{ isFavorited(cat.id) ? 'favorite' : 'favorite_border' }}</mat-icon>
+              </button>
             </div>
-          }
-          <div class="p-4 flex flex-col flex-1">
-            <h3 class="font-semibold text-slate-800 text-base mb-1">{{ cat.info.name }}</h3>
-            <p class="text-xs text-indigo-500 font-medium mb-2">🎂 {{ cat.info.age }}</p>
-            <p class="text-sm text-slate-500 leading-relaxed flex-1">{{ cat.info.description }}</p>
           </div>
-          <div class="px-4 py-3 flex items-center justify-between border-t border-slate-100">
-            <a [routerLink]="['/cat', cat.id]" mat-button color="primary">Edit</a>
-            <button mat-icon-button
-                    [color]="isFavorited(cat.id) ? 'warn' : ''"
+
+          <!-- Body -->
+          <div class="cat-card-body">
+            <div class="cat-card-top">
+              <h3 class="cat-name">{{ cat.info.name }}</h3>
+              <span class="cat-age-badge">{{ cat.info.age }}</span>
+            </div>
+            <p class="cat-desc">{{ cat.info.description }}</p>
+          </div>
+
+          <!-- Footer -->
+          <div class="cat-card-footer">
+            <a [routerLink]="['/cat', cat.id]" class="card-link-btn">
+              View details <mat-icon>arrow_forward</mat-icon>
+            </a>
+            <button class="fav-icon-btn"
+                    [class.fav-icon-active]="isFavorited(cat.id)"
                     (click)="toggleFavorite(cat.id)"
                     [matTooltip]="isFavorited(cat.id) ? 'Remove favourite' : 'Add to favourites'">
               <mat-icon>{{ isFavorited(cat.id) ? 'favorite' : 'favorite_border' }}</mat-icon>
             </button>
           </div>
-        </mat-card>
+
+        </div>
       }
     </div>
   }
+
 </div>

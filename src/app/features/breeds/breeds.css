@@ -1,19 +1,308 @@
-::ng-deep mat-list-item {
-  height: auto !important;
-  padding: 4px 0 !important;
+/* ── Page ── */
+.breeds-page {
+  padding: 32px 32px 48px;
+  max-width: 760px;
+  margin: 0 auto;
 }
 
-.breed-avatar {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: #eef2ff;
+/* ── Header ── */
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.page-title {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.5px;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.page-subtitle {
+  font-size: 0.875rem;
+  color: #64748b;
+  margin: 4px 0 0;
+}
+
+.count-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #475569;
+  white-space: nowrap;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+}
+
+.count-chip mat-icon {
+  font-size: 15px;
+  width: 15px;
+  height: 15px;
   color: #6366f1;
+}
+
+/* ── Search ── */
+.search-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 0 14px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.search-wrap:focus-within {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99,102,241,0.1);
+}
+
+.search-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  color: #94a3b8;
+  flex-shrink: 0;
+}
+
+.search-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 14px;
+  color: #1e293b;
+  padding: 13px 10px;
+  font-family: inherit;
+}
+
+.search-input::placeholder { color: #94a3b8; }
+
+.search-clear {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: none;
+  background: #f1f5f9;
+  color: #64748b;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.15s ease;
 }
 
-.page-card.p-0 {
-  padding: 0 !important;
+.search-clear:hover { background: #e2e8f0; }
+
+.search-clear mat-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+}
+
+/* ── List ── */
+.breeds-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* ── Row ── */
+.breed-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 16px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1),
+              box-shadow 0.18s ease,
+              border-color 0.18s ease;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.breed-row:hover {
+  transform: translateX(6px);
+  box-shadow: 0 4px 20px rgba(99,102,241,0.12);
+  border-color: #c7d2fe;
+}
+
+.breed-row:hover .breed-arrow {
+  color: #6366f1;
+  transform: translateX(3px);
+}
+
+/* ── Thumbnail ── */
+.breed-thumb {
+  width: 60px;
+  height: 60px;
+  border-radius: 14px;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, #eef2ff, #f5f3ff);
+}
+
+.breed-thumb-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.breed-row:hover .breed-thumb-img { transform: scale(1.08); }
+
+.breed-thumb-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.75rem;
+}
+
+/* ── Info ── */
+.breed-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.breed-info-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.breed-name {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: #0f172a;
+  letter-spacing: -0.1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.breed-age {
+  padding: 2px 9px;
+  background: #eef2ff;
+  color: #6366f1;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.breed-desc {
+  font-size: 0.8125rem;
+  color: #94a3b8;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Arrow ── */
+.breed-arrow {
+  color: #cbd5e1;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  transition: color 0.18s ease, transform 0.18s ease;
+}
+
+.breed-arrow mat-icon {
+  font-size: 22px;
+  width: 22px;
+  height: 22px;
+}
+
+/* ── States ── */
+.state-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 80px 24px;
+}
+
+.state-label { font-size: 0.875rem; color: #94a3b8; margin: 0; }
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 80px 24px;
+  text-align: center;
+}
+
+.empty-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 24px;
+  background: linear-gradient(135deg, #eef2ff, #f5f3ff);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  margin-bottom: 4px;
+}
+
+.empty-title { font-size: 1.125rem; font-weight: 700; color: #1e293b; margin: 0; }
+.empty-sub   { font-size: 0.875rem; color: #94a3b8; margin: 0; }
+
+.go-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+  padding: 10px 20px;
+  background: #6366f1;
+  color: #ffffff;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(99,102,241,0.35);
+  transition: background 0.15s ease, transform 0.15s ease;
+  font-family: inherit;
+}
+
+.go-btn mat-icon { font-size: 18px; width: 18px; height: 18px; }
+.go-btn:hover { background: #4f46e5; transform: translateY(-1px); }
+
+.go-btn.outline {
+  background: #ffffff;
+  color: #6366f1;
+  border: 1.5px solid #c7d2fe;
+  box-shadow: none;
+}
+
+.go-btn.outline:hover { background: #eef2ff; }
+
+@media (max-width: 640px) {
+  .breeds-page { padding: 20px 16px 40px; }
+  .breed-thumb { width: 50px; height: 50px; }
 }

@@ -1,26 +1,59 @@
 <aside class="sidenav" [class.open]="isOpen()">
-  <p class="nav-section-label">Navigation</p>
+
+  <!-- Brand -->
+  <div class="sidenav-brand">
+    <div class="brand-logo">🐱</div>
+    <span class="brand-name">CatGallery</span>
+  </div>
+
+  <!-- Nav -->
   <nav class="nav-menu">
-    <a (click)="closeSidenav()" routerLink="/" routerLinkActive="active"
-       [routerLinkActiveOptions]="{ exact: true }" class="nav-link">
+    <a routerLink="/" routerLinkActive="active"
+       [routerLinkActiveOptions]="{ exact: true }"
+       class="nav-link" (click)="closeSidenav()">
       <mat-icon>home</mat-icon>
       <span>Home</span>
     </a>
-    <a (click)="closeSidenav()" routerLink="/breeds" routerLinkActive="active" class="nav-link">
+    <a routerLink="/breeds" routerLinkActive="active"
+       class="nav-link" (click)="closeSidenav()">
       <mat-icon>pets</mat-icon>
       <span>Breeds</span>
     </a>
-    <a (click)="closeSidenav()" routerLink="/gallery" routerLinkActive="active" class="nav-link">
+    <a routerLink="/gallery" routerLinkActive="active"
+       class="nav-link" (click)="closeSidenav()">
       <mat-icon>collections</mat-icon>
       <span>Gallery</span>
     </a>
-    <a (click)="closeSidenav()" routerLink="/favorites" routerLinkActive="active" class="nav-link">
+    <a routerLink="/favorites" routerLinkActive="active"
+       class="nav-link" (click)="closeSidenav()">
       <mat-icon>favorite</mat-icon>
-      <span>Favorites</span>
+      <span>Favourites</span>
     </a>
-    <a (click)="closeSidenav()" routerLink="/match" routerLinkActive="active" class="nav-link">
+    <a routerLink="/match" routerLinkActive="active"
+       class="nav-link" (click)="closeSidenav()">
       <mat-icon>auto_awesome</mat-icon>
       <span>Cat Match</span>
     </a>
   </nav>
+
+  <!-- Footer -->
+  <div class="sidenav-footer">
+    <div class="footer-avatar">🐾</div>
+    <div class="footer-info">
+      <span class="footer-name">Cat Lover</span>
+      <span class="footer-role">Admin</span>
+    </div>
+    <mat-icon class="footer-more">more_horiz</mat-icon>
+  </div>
+
 </aside>
+
+<!-- Mobile overlay -->
+@if (isOpen()) {
+  <div class="mobile-overlay" (click)="closeSidenav()"></div>
+}
+
+<!-- Mobile FAB -->
+<button class="mobile-fab" (click)="toggleSidenav()">
+  <mat-icon>{{ isOpen() ? 'close' : 'menu' }}</mat-icon>
+</button>

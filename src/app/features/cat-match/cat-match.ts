@@ -1,26 +1,15 @@
-import { Component, ChangeDetectionStrategy, signal, inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy, signal, inject, computed, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatCardModule } from '@angular/material/card';
-import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { RouterLink } from '@angular/router';
 import { CatService, NotificationService } from '../../core/service';
-import { Cat } from '../../shared/models/cat.model';
+import { CatApiResponse, CatApiListResponse } from '../../shared/models/cat.model';
 
 @Component({
   selector: 'app-cat-match',
   standalone: true,
-  imports: [
-    CommonModule,
-    MatCardModule,
-    MatButtonModule,
-    MatIconModule,
-    MatProgressSpinnerModule,
-    MatSnackBarModule,
-    MatProgressBarModule
-  ],
+  imports: [CommonModule, MatIconModule, MatProgressSpinnerModule, RouterLink],
   templateUrl: './cat-match.html',
   styleUrl: './cat-match.css',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -29,20 +18,35 @@ export class CatMatch {
   private readonly catService = inject(CatService);
   private readonly notify = inject(NotificationService);
 
-  cats = signal<Cat[]>([]);
+  cats = signal<CatApiResponse[]>([]);
   currentIndex = signal(0);
   isLoading = signal(false);
-  matchedCats = signal<Cat[]>([]);
+  likedCats = signal<CatApiResponse[]>([]);
+  passedCats = signal<CatApiResponse[]>([]);
+  swipeDir = signal<'like' | 'pass' | null>(null);
+  showMatches = signal(false);
 
-  constructor() {
-    this.loadCats();
+  readonly currentCat = computed(() => this.cats()[this.currentIndex()] ?? null);
+  readonly isDone = computed(() => !this.isLoading() && this.currentIndex() >= this.cats().length && this.cats().length > 0);
+  readonly progress = computed(() =>
+    this.cats().length ? Math.round((this.currentIndex() / this.cats().length) * 100) : 0
+  );
+
+  constructor() { this.loadCats(); }
+
+  @HostListener('window:keydown', ['$event'])
+  onKey(e: KeyboardEvent) {
+    if (this.isDone() || !this.currentCat()) return;
+    if (e.key === 'ArrowRight') this.onLike();
+    if (e.key === 'ArrowLeft')  this.onPass();
   }
 
   loadCats(): void {
     this.isLoading.set(true);
     this.catService.getAllCats().subscribe({
-      next: (cats) => {
-        this.cats.set(cats);
+      next: (response: CatApiListResponse) => {
+        const shuffled = [...this.catService.assignImageUrl(response?.data ?? [])].sort(() => Math.random() - 0.5);
+        this.cats.set(shuffled);
         this.isLoading.set(false);
       },
       error: () => {
@@ -53,30 +57,34 @@ export class CatMatch {
   }
 
   onLike(): void {
-    const currentCat = this.cats()[this.currentIndex()];
-    this.matchedCats.update(cats => [...cats, currentCat]);
-    this.nextCat();
-    this.notify.show(`You liked ${currentCat.name}! 💕`, 2000);
+    const cat = this.currentCat();
+    if (!cat) return;
+    this.swipeDir.set('like');
+    this.likedCats.update(list => [...list, cat]);
+    this.saveFavourite(cat.id);
+    setTimeout(() => { this.swipeDir.set(null); this.currentIndex.update(i => i + 1); }, 350);
   }
 
-  onDislike(): void {
-    this.nextCat();
+  onPass(): void {
+    if (!this.currentCat()) return;
+    this.swipeDir.set('pass');
+    this.passedCats.update(list => [...list, this.currentCat()!]);
+    setTimeout(() => { this.swipeDir.set(null); this.currentIndex.update(i => i + 1); }, 350);
   }
 
-  nextCat(): void {
-    const next = this.currentIndex() + 1;
-    if (next >= this.cats().length) {
-      this.notify.show('No more cats! Check your matches.');
-    } else {
-      this.currentIndex.set(next);
+  restart(): void {
+    this.currentIndex.set(0);
+    this.likedCats.set([]);
+    this.passedCats.set([]);
+    this.showMatches.set(false);
+    const shuffled = [...this.cats()].sort(() => Math.random() - 0.5);
+    this.cats.set(shuffled);
+  }
+
+  private saveFavourite(id: string): void {
+    const stored: string[] = JSON.parse(localStorage.getItem('favoriteCats') || '[]');
+    if (!stored.includes(id)) {
+      localStorage.setItem('favoriteCats', JSON.stringify([...stored, id]));
     }
-  }
-
-  get currentCat(): Cat | undefined {
-    return this.cats()[this.currentIndex()];
-  }
-
-  get progress(): number {
-    return (this.currentIndex() / this.cats().length) * 100;
   }
 }
