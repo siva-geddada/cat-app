@@ -1,1 +1,77 @@
-<p>home works!</p>
+<div class="container">
+  <div class="header">
+    <h1>🐱 Cat Gallery</h1>
+    <p class="subtitle">Manage your favorite cats</p>
+  </div>
+
+  <div class="content">
+    <!-- Create Cat Form -->
+    <div class="create-section">
+      <h2>Add New Cat</h2>
+      <form [formGroup]="createForm" (ngSubmit)="onCreateCat()" class="form">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Cat Name</mat-label>
+          <input matInput formControlName="name" placeholder="Enter cat name" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Age</mat-label>
+          <input matInput formControlName="age" placeholder="e.g., 2 years" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Description</mat-label>
+          <textarea matInput formControlName="description" placeholder="Describe the cat..." rows="3"></textarea>
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" [disabled]="!createForm.valid || isCreating()">
+          @if (isCreating()) {
+            <mat-spinner diameter="20"></mat-spinner>
+          } @else {
+            Add Cat
+          }
+        </button>
+      </form>
+    </div>
+
+    <!-- Cats List -->
+    <div class="cats-section">
+      <h2>All Cats</h2>
+
+      @if (isLoading()) {
+        <div class="loading">
+          <mat-spinner></mat-spinner>
+          <p>Loading cats...</p>
+        </div>
+      } @else if (cats().length === 0) {
+        <div class="empty-state">
+          <p>No cats yet. Create one above!</p>
+        </div>
+      } @else {
+        <div class="cats-grid">
+          @for (cat of cats(); track cat.id) {
+            <mat-card class="cat-card">
+              <div class="cat-content">
+                <h3>{{ cat.name }}</h3>
+                <p class="age"><strong>Age:</strong> {{ cat.age }}</p>
+                <p class="description">{{ cat.description }}</p>
+              </div>
+              <div class="cat-actions">
+                <a [routerLink]="['/cat', cat.id]" mat-button color="accent">
+                  View & Edit
+                </a>
+                <button
+                  mat-icon-button
+                  color="warn"
+                  (click)="onDeleteCat(cat.id)"
+                  [disabled]="isDeleting(cat.id)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </mat-card>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</div>

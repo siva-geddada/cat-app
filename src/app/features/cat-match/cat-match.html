@@ -1,1 +1,53 @@
-<p>cat-match works!</p>
+<div class="container">
+  <div class="header">
+    <h1>💕 Cat Match</h1>
+    <p class="subtitle">Like or pass on cats to find your matches</p>
+  </div>
+
+  @if (isLoading()) {
+    <div class="loading">
+      <mat-spinner></mat-spinner>
+      <p>Loading cats...</p>
+    </div>
+  } @else if (currentCat) {
+    <div class="match-container">
+      <mat-progress-bar mode="determinate" [value]="progress"></mat-progress-bar>
+
+      <mat-card class="cat-card-large">
+        <div class="cat-image">
+          <mat-icon class="large-icon">pets</mat-icon>
+        </div>
+        <mat-card-content>
+          <h2>{{ currentCat.name }}</h2>
+          <p class="age"><strong>Age:</strong> {{ currentCat.age }}</p>
+          <p class="description">{{ currentCat.description }}</p>
+        </mat-card-content>
+      </mat-card>
+
+      <div class="match-actions">
+        <button mat-raised-button color="warn" (click)="onDislike()">
+          <mat-icon>close</mat-icon>
+          Pass
+        </button>
+        <button mat-raised-button color="accent" (click)="onLike()">
+          <mat-icon>favorite</mat-icon>
+          Like
+        </button>
+      </div>
+
+      @if (matchedCats().length > 0) {
+        <div class="matches-info">
+          <p>❤️ You have {{ matchedCats().length }} match(es)!</p>
+        </div>
+      }
+    </div>
+  } @else {
+    <div class="no-more">
+      <mat-icon class="large-icon">sentiment_satisfied</mat-icon>
+      <p>No more cats to match!</p>
+      @if (matchedCats().length > 0) {
+        <p>You matched with {{ matchedCats().length }} cat(s)</p>
+      }
+    </div>
+  }
+</div>

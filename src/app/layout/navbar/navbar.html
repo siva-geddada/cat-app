@@ -1,29 +1,14 @@
-<header
-  class="bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl docked full-width top-0 sticky z-50 flex justify-between items-center w-full px-6 h-16 shadow-[0_8px_24px_-4px_rgba(26,28,28,0.04)]">
-  <div class="flex items-center gap-4">
-    <span class="text-2xl font-black tracking-tight text-amber-900 dark:text-amber-100 font-headline">Cat
-      Explorer</span>
-  </div>
-  <div class="hidden md:flex items-center gap-8">
-    <nav class="flex gap-6">
-      <a
-        class="text-zinc-600 dark:text-zinc-400 hover:bg-amber-50 dark:hover:bg-amber-900/20 transition-colors px-3 py-1 rounded-lg cursor-pointer">Home</a>
-      <a class="text-amber-800 dark:text-amber-400 font-bold px-3 py-1 rounded-lg cursor-pointer">Breeds</a>
-      <a
-        class="text-zinc-600 dark:text-zinc-400 hover:bg-amber-50 dark:hover:bg-amber-900/20 transition-colors px-3 py-1 rounded-lg cursor-pointer">Gallery</a>
-      <a
-        class="text-zinc-600 dark:text-zinc-400 hover:bg-amber-50 dark:hover:bg-amber-900/20 transition-colors px-3 py-1 rounded-lg cursor-pointer">Favorites</a>
+<mat-toolbar color="primary">
+  <div class="navbar-container">
+    <h1 class="app-title">
+      <span class="emoji">🐱</span>
+      Cat Gallery
+    </h1>
+    <nav class="nav-links">
+      <a routerLink="/" mat-button>
+        <mat-icon>home</mat-icon>
+        Home
+      </a>
     </nav>
   </div>
-  <div class="flex items-center gap-4">
-    <button
-      class="material-symbols-outlined text-zinc-600 p-2 hover:bg-amber-50 rounded-full transition-all active:scale-90"
-      data-icon="search">search</button>
-    <button
-      class="material-symbols-outlined text-zinc-600 p-2 hover:bg-amber-50 rounded-full transition-all active:scale-90"
-      data-icon="contrast">contrast</button>
-    <button
-      class="material-symbols-outlined text-zinc-600 p-2 hover:bg-amber-50 rounded-full transition-all active:scale-90"
-      data-icon="favorite">favorite</button>
-  </div>
-</header>
+</mat-toolbar>

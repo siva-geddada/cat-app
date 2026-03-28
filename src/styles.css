@@ -1,3 +1,60 @@
 /* You can add global styles to this file, and also import other style files */
 
+@import "@angular/material/prebuilt-themes/indigo-pink.css";
 @import "tailwindcss";
+
+body {
+  font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  min-height: 100vh;
+}
+
+html, body {
+  height: 100%;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+mat-form-field {
+  display: block !important;
+  margin-bottom: 16px !important;
+}
+
+mat-form-field .mat-mdc-form-field-subscript-wrapper {
+  display: none;
+}
+
+.mdc-text-field--filled {
+  background-color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.mat-mdc-button, .mat-mdc-raised-button {
+  border-radius: 8px !important;
+  text-transform: uppercase !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.5px !important;
+}
+
+mat-card {
+  border-radius: 12px !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+  transition: all 0.3s ease !important;
+}
+
+mat-card:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15) !important;
+  transform: translateY(-2px);
+}
+
+mat-toolbar {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 100 !important;
+}

@@ -1,0 +1,56 @@
+<div class="container">
+  <header class="header">
+    <button mat-icon-button (click)="onBack()" class="back-button">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <h1>🐱 Cat Details</h1>
+  </header>
+
+  @if (isLoading()) {
+    <div class="loading">
+      <mat-spinner></mat-spinner>
+      <p>Loading cat...</p>
+    </div>
+  } @else if (cat()) {
+    <mat-card class="detail-card">
+      <h2>{{ cat()!.name }}</h2>
+
+      <form [formGroup]="updateForm" (ngSubmit)="onUpdateCat()" class="form">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Cat Name</mat-label>
+          <input matInput formControlName="name" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Age</mat-label>
+          <input matInput formControlName="age" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Description</mat-label>
+          <textarea matInput formControlName="description" rows="4"></textarea>
+        </mat-form-field>
+
+        <div class="actions">
+          <button mat-raised-button color="primary" [disabled]="!updateForm.valid || isUpdating()">
+            @if (isUpdating()) {
+              <mat-spinner diameter="20"></mat-spinner>
+            } @else {
+              Update Cat
+            }
+          </button>
+          <button mat-stroked-button color="accent" type="button" (click)="onBack()">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </mat-card>
+  } @else {
+    <div class="error-state">
+      <p>Cat not found</p>
+      <button mat-raised-button color="primary" (click)="onBack()">
+        Go Back
+      </button>
+    </div>
+  }
+</div>

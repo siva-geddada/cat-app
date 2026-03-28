@@ -1,0 +1,90 @@
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.header h1 {
+  font-size: 2.5rem;
+  margin: 0;
+  color: #333;
+}
+
+.header .subtitle {
+  font-size: 1.1rem;
+  color: #666;
+  margin-top: 8px;
+}
+
+.cats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.cat-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.cat-content {
+  padding: 16px;
+}
+
+.cat-content h3 {
+  margin: 0 0 12px 0;
+  font-size: 1.3rem;
+  color: #333;
+}
+
+.age, .description {
+  margin: 8px 0;
+  color: #666;
+}
+
+.description {
+  line-height: 1.4;
+}
+
+.cat-actions {
+  padding: 12px 16px;
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
+  border-top: 1px solid #eee;
+}
+
+.empty-state {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+  color: #666;
+}
+
+.empty-icon {
+  font-size: 64px;
+  width: 64px;
+  height: 64px;
+  margin-bottom: 16px;
+  color: #999;
+}
+
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+  color: #666;
+}

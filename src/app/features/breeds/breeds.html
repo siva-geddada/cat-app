@@ -1,1 +1,29 @@
-<p>breeds works!</p>
+<div class="container">
+  <div class="header">
+    <h1>🐾 All Cats</h1>
+    <p class="subtitle">Explore our complete collection</p>
+  </div>
+
+  @if (isLoading()) {
+    <div class="loading">
+      <mat-spinner></mat-spinner>
+      <p>Loading cats...</p>
+    </div>
+  } @else {
+    <mat-card class="cats-list-card">
+      <mat-list>
+        @for (cat of cats(); track cat.id) {
+          <mat-list-item>
+            <mat-icon matListItemIcon>pets</mat-icon>
+            <div matListItemTitle>{{ cat.name }}</div>
+            <div matListItemLine>{{ cat.age }} • {{ cat.description | slice:0:50 }}...</div>
+            <a [routerLink]="['/cat', cat.id]" mat-icon-button matListItemMeta>
+              <mat-icon>arrow_forward</mat-icon>
+            </a>
+          </mat-list-item>
+          <mat-divider></mat-divider>
+        }
+      </mat-list>
+    </mat-card>
+  }
+</div>

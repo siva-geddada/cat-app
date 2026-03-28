@@ -1,5 +1,9 @@
-<div class="bg-background font-body text-on-surface">
+<div class="app-layout">
   <app-navbar></app-navbar>
-  <app-sidenav></app-sidenav>
+  <div class="main-content">
+    <app-sidenav></app-sidenav>
+    <main class="page-content">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
 </div>
-<router-outlet />
