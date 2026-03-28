@@ -1,0 +1,9 @@
+{
+  "buildCommand": "ng build --configuration production",
+  "outputDirectory": "dist/cat-app/browser",
+  "framework": null,
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api/proxy" },
+    { "source": "/((?!api).*)", "destination": "/index.html" }
+  ]
+}
