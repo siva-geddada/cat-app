@@ -1,10 +1,6 @@
-import { CatApiResponse, CreateCatRequest } from './../../shared/models/cat.model';
 import { Injectable, inject } from '@angular/core';
 import { HttpService } from './http.service';
-import { CatImageService } from './cat-image.service';
-
-
-
+import { CatApiResponse, CatApiListResponse, CreateCatRequest } from '../../shared/models/cat.model';
 
 @Injectable({ providedIn: 'root' })
 export class CatService {
@@ -18,29 +14,27 @@ export class CatService {
     }));
   }
 
-
   getAllCats() {
-    return this.httpService.get<any>(`${this.baseUrl}/list`);
+    return this.httpService.get<CatApiListResponse>(`${this.baseUrl}/list`);
   }
 
   getCatById(id: string) {
-    return this.httpService.get<any>(`${this.baseUrl}/list?id=${id}`);
+    return this.httpService.get<CatApiListResponse>(`${this.baseUrl}/list?id=${id}`);
   }
 
   getMultipleCats(ids: string[]) {
-    const idString = ids.join(',');
-    return this.httpService.get<any>(`${this.baseUrl}/list?id=${idString}`);
+    return this.httpService.get<CatApiListResponse>(`${this.baseUrl}/list?id=${ids.join(',')}`);
   }
 
   createCat(cat: CreateCatRequest) {
-    return this.httpService.post<any>(`${this.baseUrl}/create`, cat);
+    return this.httpService.post<CatApiResponse>(`${this.baseUrl}/create`, cat);
   }
 
   updateCat(id: string, cat: CreateCatRequest) {
-    return this.httpService.put<any>(`${this.baseUrl}/update?id=${id}`, cat);
+    return this.httpService.put<CatApiResponse>(`${this.baseUrl}/update?id=${id}`, cat);
   }
 
   deleteCat(id: string) {
-    return this.httpService.delete<any>(`${this.baseUrl}/delete?id=${id}`);
+    return this.httpService.delete<void>(`${this.baseUrl}/delete?id=${id}`);
   }
 }

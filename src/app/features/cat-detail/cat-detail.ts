@@ -1,16 +1,14 @@
-import { Component, ChangeDetectionStrategy, signal, inject, computed } from '@angular/core';
+import { Component, ChangeDetectionStrategy, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CatService, NotificationService } from '../../core/service';
-import { CatApiResponse } from '../../shared/models/cat.model';
+import { CatApiResponse, CatApiListResponse } from '../../shared/models/cat.model';
 
 @Component({
   selector: 'app-cat-detail',
@@ -21,10 +19,8 @@ import { CatApiResponse } from '../../shared/models/cat.model';
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
-    MatCardModule,
     MatProgressSpinnerModule,
     MatIconModule,
-    MatSnackBarModule
   ],
   templateUrl: './cat-detail.html',
   styleUrl: './cat-detail.css',
@@ -57,11 +53,10 @@ export class CatDetailComponent {
 
     this.isLoading.set(true);
     this.catService.getCatById(id).subscribe({
-      next: (response: any) => {
-        // API returns { data: cat } or { data: [cat] } — normalise both
+      next: (response: CatApiListResponse) => {
         const raw: CatApiResponse = Array.isArray(response?.data)
           ? response.data[0]
-          : (response?.data ?? response);
+          : (response?.data ?? response as any);
 
         if (!raw?.info) {
           this.notify.show('Cat data is missing');

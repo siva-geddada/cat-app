@@ -1,13 +1,10 @@
 import { Component, ChangeDetectionStrategy, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
-import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterLink } from '@angular/router';
 import { CatApiResponse, CatApiListResponse } from '../../shared/models/cat.model';
 import { CatService } from '../../core/service/cat.service';
@@ -19,13 +16,10 @@ import { NotificationService } from '../../core/service/notification.service';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
-    MatCardModule,
     MatProgressSpinnerModule,
     MatIconModule,
-    MatTooltipModule,
     RouterLink,
   ],
   templateUrl: './home.html',
@@ -71,7 +65,6 @@ export class HomeComponent {
 
   onCreateCat(): void {
     if (!this.createForm.valid) return;
-
     this.isCreating.set(true);
     const { name, age, description } = this.createForm.value;
     this.catService.createCat({ name: name!, age: age!, description: description! }).subscribe({
@@ -90,23 +83,16 @@ export class HomeComponent {
   }
 
   onDeleteCat(catId: string): void {
-    const deletingIds = new Set(this.deletingIds());
-    deletingIds.add(catId);
-    this.deletingIds.set(deletingIds);
-
+    this.deletingIds.update(ids => new Set([...ids, catId]));
     this.catService.deleteCat(catId).subscribe({
       next: () => {
         this.cats.update((cats) => cats.filter((c) => c.id !== catId));
         this.notify.show('Cat deleted successfully!');
-        const updatedIds = new Set(this.deletingIds());
-        updatedIds.delete(catId);
-        this.deletingIds.set(updatedIds);
+        this.deletingIds.update(ids => { const s = new Set(ids); s.delete(catId); return s; });
       },
       error: () => {
         this.notify.show('Failed to delete cat');
-        const updatedIds = new Set(this.deletingIds());
-        updatedIds.delete(catId);
-        this.deletingIds.set(updatedIds);
+        this.deletingIds.update(ids => { const s = new Set(ids); s.delete(catId); return s; });
       },
     });
   }
