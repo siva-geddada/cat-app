@@ -3,7 +3,10 @@
   <!-- Brand -->
   <div class="sidenav-brand">
     <div class="brand-logo">🐱</div>
-    <span class="brand-name">CatGallery</span>
+    <div class="brand-text">
+      <span class="brand-name">Cat Explorer</span>
+      <span class="brand-tagline">Premium Feline Database</span>
+    </div>
   </div>
 
   <!-- Nav -->
@@ -36,6 +39,14 @@
     </a>
   </nav>
 
+  <!-- CTA -->
+  <div class="sidenav-cta">
+    <button class="cta-btn" routerLink="/gallery">
+      <mat-icon>collections</mat-icon>
+      Explore Gallery
+    </button>
+  </div>
+
   <!-- Footer -->
   <div class="sidenav-footer">
     <div class="footer-avatar">🐾</div>
@@ -48,12 +59,10 @@
 
 </aside>
 
-<!-- Mobile overlay -->
 @if (isOpen()) {
   <div class="mobile-overlay" (click)="closeSidenav()"></div>
 }
 
-<!-- Mobile FAB -->
 <button class="mobile-fab" (click)="toggleSidenav()">
   <mat-icon>{{ isOpen() ? 'close' : 'menu' }}</mat-icon>
 </button>

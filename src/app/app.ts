@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, ViewChild } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { RouterOutlet, RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatRippleModule } from '@angular/material/core';
 import { Sidenav } from './layout/sidenav/sidenav';
@@ -7,7 +7,7 @@ import { Sidenav } from './layout/sidenav/sidenav';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, Sidenav, MatIconModule, MatRippleModule],
+  imports: [RouterOutlet, RouterLink, Sidenav, MatIconModule, MatRippleModule],
   templateUrl: './app.html',
   styleUrl: './app.css',
   changeDetection: ChangeDetectionStrategy.OnPush
